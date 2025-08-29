@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  netdisk-search:
+    build: .
+    container_name: netdisk-search
+    ports:
+      - "3000:80"
+    environment:
+      - API_DOMAIN=104.194.69.89
+    restart: unless-stopped
