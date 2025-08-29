@@ -1,13 +1,13 @@
 # 构建阶段
-FROM node:18-alpine as builder
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
 # 只复制依赖文件
 COPY package*.json ./
 
-# 安装依赖（只安装生产依赖）
-RUN npm ci --only=production && npm cache clean --force
+# 安装依赖（包含开发依赖，构建需要）
+RUN npm ci && npm cache clean --force
 
 # 复制源代码
 COPY src ./src
@@ -20,7 +20,7 @@ COPY postcss.config.js ./
 # 构建应用
 RUN npm run build
 
-# 生产阶段
+# 生产阶段 - 使用更小的基础镜像
 FROM nginx:alpine
 
 # 复制构建产物
