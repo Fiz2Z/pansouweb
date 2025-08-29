@@ -143,13 +143,13 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
             <div className="flex space-x-3 p-6 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={handleCancel}
-                className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="flex-1 px-4 py-3 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
               >
                 取消
               </button>
               <button
                 onClick={handleSave}
-                className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="flex-1 px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
               >
                 保存设置
               </button>
