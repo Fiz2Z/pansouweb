@@ -10,9 +10,13 @@ const CLOUD_TYPES = [
   { value: '115', label: '115网盘', color: 'bg-yellow-500' },
   { value: 'pikpak', label: 'PikPak', color: 'bg-pink-500' },
   { value: 'xunlei', label: '迅雷网盘', color: 'bg-indigo-500' },
+  { value: 'thunder', label: 'Thunder', color: 'bg-indigo-600' },
   { value: '123', label: '123网盘', color: 'bg-cyan-500' },
   { value: 'magnet', label: '磁力链接', color: 'bg-gray-500' },
-  { value: 'ed2k', label: 'ED2K链接', color: 'bg-gray-600' }
+  { value: 'ed2k', label: 'ED2K链接', color: 'bg-gray-600' },
+  { value: 'mobile', label: '移动云盘', color: 'bg-teal-500' },
+  { value: 'lanzou', label: '蓝奏云盘', color: 'bg-blue-600' },
+  { value: 'torrent', label: 'Torrent', color: 'bg-gray-700' }
 ]
 
 const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
@@ -63,10 +67,10 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
 
       {/* 模态框 */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-hidden">
-            {/* 头部 */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md my-8 flex flex-col max-h-[calc(100vh-4rem)]">
+            {/* 头部 - 固定 */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">搜索设置</h2>
               <button
                 onClick={handleCancel}
@@ -76,8 +80,8 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
               </button>
             </div>
 
-            {/* 内容 */}
-            <div className="p-6 overflow-y-auto">
+            {/* 内容 - 可滚动 */}
+            <div className="p-6 overflow-y-auto flex-grow">
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -139,8 +143,8 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
               </div>
             </div>
 
-            {/* 底部按钮 */}
-            <div className="flex space-x-3 p-6 border-t border-gray-200 dark:border-gray-700">
+            {/* 底部按钮 - 固定 */}
+            <div className="flex space-x-3 p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
               <button
                 onClick={handleCancel}
                 className="flex-1 px-4 py-3 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
