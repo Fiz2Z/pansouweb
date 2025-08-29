@@ -91,18 +91,19 @@ export const searchNetdisk = async (params) => {
   }
 
   try {
-    console.log('API请求参数:', searchParams)
-    console.log('API地址:', API_BASE_URL)
-    
     const response = await api.post('/api/search', searchParams)
-    console.log('API响应状态:', response.status)
-    console.log('API响应数据:', response.data)
-    console.log('merged_by_type keys:', Object.keys(response.data.merged_by_type || {}))
     
-    return response.data
+    // 检查响应格式，如果有包装结构则解包
+    let resultData = response.data
+    if (resultData && resultData.code === 200 && resultData.data) {
+      resultData = resultData.data
+    }
+    
+    console.log(`搜索完成: 找到 ${resultData.total || 0} 条结果，${Object.keys(resultData.merged_by_type || {}).length} 种网盘类型`)
+    
+    return resultData
   } catch (error) {
     console.error('搜索API调用失败:', error)
-    console.error('错误详情:', error.response?.data)
     throw error
   }
 }

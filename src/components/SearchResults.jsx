@@ -192,60 +192,22 @@ const LinkCard = ({ link, cloudType }) => {
 const SearchResults = ({ results }) => {
   const [activeTab, setActiveTab] = useState(null)
 
-  // 调试信息
-  console.log('SearchResults received:', results)
-  console.log('merged_by_type:', results?.merged_by_type)
-
   // 获取可用的网盘类型和数量
   const cloudTypes = results?.merged_by_type ? Object.keys(results.merged_by_type) : []
-  console.log('cloudTypes:', cloudTypes)
   
   // 设置默认激活的标签页
   React.useEffect(() => {
-    console.log('useEffect triggered:', { cloudTypes: cloudTypes.length, activeTab })
     if (cloudTypes.length > 0 && !activeTab) {
-      console.log('Setting activeTab to:', cloudTypes[0])
       setActiveTab(cloudTypes[0])
     }
   }, [cloudTypes, activeTab])
 
   const activeLinks = activeTab ? results?.merged_by_type?.[activeTab] || [] : []
-  console.log('activeTab:', activeTab, 'activeLinks:', activeLinks)
 
-  // 检查是否有数据但没有 merged_by_type
-  if (!results) {
-    console.log('No results')
+  if (!results || !results.merged_by_type || Object.keys(results.merged_by_type).length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">没有找到相关资源</p>
-      </div>
-    )
-  }
-
-  // 如果没有 merged_by_type 但有 results，尝试显示原始结果
-  if (!results.merged_by_type && results.results && results.results.length > 0) {
-    console.log('No merged_by_type but has results array:', results.results.length)
-    return (
-      <div className="space-y-6">
-        <div className="text-center py-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">找到 {results.total || results.results.length} 条结果</h3>
-          <p className="text-gray-500 mb-4">API返回了原始结果，但没有按网盘类型分类</p>
-          <pre className="text-xs text-left bg-gray-100 p-4 rounded overflow-auto max-h-40">
-            {JSON.stringify(results, null, 2)}
-          </pre>
-        </div>
-      </div>
-    )
-  }
-
-  if (!results.merged_by_type || Object.keys(results.merged_by_type).length === 0) {
-    console.log('No merged_by_type or empty merged_by_type')
-    return (
-      <div className="text-center py-8">
-        <p className="text-gray-500">没有找到相关资源</p>
-        <pre className="text-xs text-left bg-gray-100 p-4 rounded mt-4 overflow-auto max-h-40">
-          {JSON.stringify(results, null, 2)}
-        </pre>
+        <p className="text-gray-500 dark:text-gray-400">没有找到相关资源</p>
       </div>
     )
   }
@@ -262,14 +224,7 @@ const SearchResults = ({ results }) => {
         </div>
       </div>
 
-      {/* 调试信息 */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-xs">
-        <h4 className="font-semibold mb-2">调试信息:</h4>
-        <div>cloudTypes: {JSON.stringify(cloudTypes)}</div>
-        <div>activeTab: {activeTab}</div>
-        <div>activeLinks count: {activeLinks.length}</div>
-        <div>total: {results.total}</div>
-      </div>
+
 
       {cloudTypes.length === 0 ? (
         <div className="text-center py-12">
@@ -280,12 +235,6 @@ const SearchResults = ({ results }) => {
           <p className="text-gray-500 dark:text-gray-400">
             请尝试使用其他关键词或调整搜索条件
           </p>
-          <details className="mt-4 text-left">
-            <summary className="cursor-pointer text-sm text-gray-600">显示原始数据</summary>
-            <pre className="text-xs bg-gray-100 p-2 rounded mt-2 overflow-auto max-h-40">
-              {JSON.stringify(results, null, 2)}
-            </pre>
-          </details>
         </div>
       ) : (
         <>
@@ -315,14 +264,8 @@ const SearchResults = ({ results }) => {
               </div>
 
               {activeLinks.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="text-gray-500 dark:text-gray-400 mb-4">该网盘类型下暂无结果</div>
-                  <details className="text-left">
-                    <summary className="cursor-pointer text-sm text-gray-600">显示该类型原始数据</summary>
-                    <pre className="text-xs bg-gray-100 p-2 rounded mt-2 overflow-auto max-h-40">
-                      {JSON.stringify(results.merged_by_type[activeTab], null, 2)}
-                    </pre>
-                  </details>
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  该网盘类型下暂无结果
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
