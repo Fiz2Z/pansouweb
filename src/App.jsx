@@ -12,6 +12,19 @@ function App() {
   const [searchResults, setSearchResults] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [selectedCloudTypes, setSelectedCloudTypes] = useState(() => {
+    try {
+      const saved = localStorage.getItem('selectedCloudTypes')
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
+
+  const handleCloudTypesChange = (cloudTypes) => {
+    setSelectedCloudTypes(cloudTypes)
+    localStorage.setItem('selectedCloudTypes', JSON.stringify(cloudTypes))
+  }
 
   const handleSearch = async (searchParams) => {
     setIsLoading(true)
@@ -33,13 +46,20 @@ function App() {
   return (
     <ThemeProvider>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <Header />
+        <Header 
+          selectedCloudTypes={selectedCloudTypes}
+          onCloudTypesChange={handleCloudTypesChange}
+        />
         
         <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl">
         <div className="space-y-8">
           {/* 搜索表单 */}
           <div className="animate-fade-in">
-            <SearchForm onSearch={handleSearch} isLoading={isLoading} />
+            <SearchForm 
+              onSearch={handleSearch} 
+              isLoading={isLoading}
+              selectedCloudTypes={selectedCloudTypes}
+            />
           </div>
 
           {/* 加载状态 */}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ExternalLink, Copy, Eye, Calendar, Database, Image as ImageIcon } from 'lucide-react'
+import { ExternalLink, Copy, Eye, Calendar, Image as ImageIcon, Key, Download } from 'lucide-react'
 
 const CLOUD_TYPE_CONFIG = {
   baidu: { name: '百度网盘', color: 'bg-blue-500', icon: '📁' },
@@ -43,16 +43,16 @@ const CloudTypeTab = ({ type, count, isActive, onClick }) => {
 }
 
 const LinkCard = ({ link, cloudType }) => {
-  const [copied, setCopied] = useState(false)
+  const [copiedItem, setCopiedItem] = useState(null)
   const [imageError, setImageError] = useState(false)
   
   const config = CLOUD_TYPE_CONFIG[cloudType] || { name: cloudType, color: 'bg-gray-500', icon: '📁' }
 
-  const copyToClipboard = async (text) => {
+  const copyToClipboard = async (text, type) => {
     try {
       await navigator.clipboard.writeText(text)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      setCopiedItem(type)
+      setTimeout(() => setCopiedItem(null), 2000)
     } catch (err) {
       console.error('复制失败:', err)
     }
@@ -61,6 +61,10 @@ const LinkCard = ({ link, cloudType }) => {
   const formatDate = (dateString) => {
     try {
       const date = new Date(dateString)
+      // 检查是否是无效日期或默认的0001年
+      if (isNaN(date.getTime()) || date.getFullYear() === 1) {
+        return '未知日期'
+      }
       return date.toLocaleString('zh-CN', {
         year: 'numeric',
         month: '2-digit',
@@ -69,7 +73,7 @@ const LinkCard = ({ link, cloudType }) => {
         minute: '2-digit'
       })
     } catch {
-      return dateString
+      return '未知日期'
     }
   }
 
@@ -78,50 +82,27 @@ const LinkCard = ({ link, cloudType }) => {
   }
 
   return (
-    <div className="card hover:shadow-lg transition-all duration-200 group">
-      <div className="flex items-start justify-between mb-3">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
+      {/* 头部 */}
+      <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-2">
           <div className={`w-3 h-3 rounded-full ${config.color}`}></div>
-          <span className="font-medium text-gray-900">{config.name}</span>
+          <span className="font-medium text-gray-900 dark:text-gray-100">{config.name}</span>
         </div>
         
-        <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={() => copyToClipboard(link.url)}
-            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
-            title="复制链接"
-          >
-            {copied ? (
-              <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-              </svg>
-            ) : (
-              <Copy className="w-4 h-4" />
-            )}
-          </button>
-          
-          <button
-            onClick={openLink}
-            className="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
-            title="打开链接"
-          >
-            <ExternalLink className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* 标题和描述 */}
-      <div className="mb-4">
-        <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 leading-tight">
-          {link.note || '未命名资源'}
-        </h3>
-        
-        {link.source && (
-          <div className="flex items-center space-x-1 text-sm text-gray-500">
-            <Database className="w-3 h-3" />
-            <span>来源: {link.source}</span>
+        {link.datetime && (
+          <div className="flex items-center space-x-1 text-xs text-gray-400 dark:text-gray-500">
+            <Calendar className="w-3 h-3" />
+            <span>{formatDate(link.datetime)}</span>
           </div>
         )}
+      </div>
+
+      {/* 标题 */}
+      <div className="mb-4">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 leading-tight">
+          {link.note || '未命名资源'}
+        </h3>
       </div>
 
       {/* 图片预览 */}
@@ -129,7 +110,7 @@ const LinkCard = ({ link, cloudType }) => {
         <div className="mb-4">
           <div className="grid grid-cols-2 gap-2">
             {link.images.slice(0, 4).map((image, idx) => (
-              <div key={idx} className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
+              <div key={idx} className="relative aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
                 {!imageError ? (
                   <img
                     src={image}
@@ -147,43 +128,64 @@ const LinkCard = ({ link, cloudType }) => {
             ))}
           </div>
           {link.images.length > 4 && (
-            <p className="text-xs text-gray-500 mt-2">还有 {link.images.length - 4} 张图片</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">还有 {link.images.length - 4} 张图片</p>
           )}
         </div>
       )}
 
-      {/* 链接信息 */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-500">链接地址:</span>
-          <button
-            onClick={openLink}
-            className="text-primary-600 hover:text-primary-700 font-mono text-xs bg-gray-50 px-2 py-1 rounded truncate max-w-[200px]"
-            title={link.url}
-          >
-            {link.url}
-          </button>
-        </div>
-        
+      {/* 操作按钮 */}
+      <div className="space-y-3">
+        {/* 直达按钮 */}
+        <button
+          onClick={openLink}
+          className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-medium transition-colors"
+        >
+          <Download className="w-4 h-4" />
+          <span>直达</span>
+        </button>
+
+        {/* 提取码（如果有） */}
         {link.password && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500">提取码:</span>
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 text-sm text-orange-600 dark:text-orange-400">
+              <Key className="w-4 h-4" />
+              <span>提取码:</span>
+            </div>
             <button
-              onClick={() => copyToClipboard(link.password)}
-              className="text-gray-900 font-mono font-semibold bg-yellow-50 border border-yellow-200 px-2 py-1 rounded hover:bg-yellow-100 transition-colors"
-              title="点击复制提取码"
+              onClick={() => copyToClipboard(link.password, 'password')}
+              className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-300 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors font-mono font-semibold"
             >
-              {link.password}
+              <span>{link.password}</span>
+              {copiedItem === 'password' ? (
+                <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
             </button>
           </div>
         )}
-        
-        {link.datetime && (
-          <div className="flex items-center space-x-1 text-xs text-gray-400">
-            <Calendar className="w-3 h-3" />
-            <span>{formatDate(link.datetime)}</span>
-          </div>
-        )}
+
+        {/* 复制链接按钮 */}
+        <button
+          onClick={() => copyToClipboard(link.url, 'url')}
+          className="w-full flex items-center justify-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          {copiedItem === 'url' ? (
+            <>
+              <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-green-500">已复制链接</span>
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4" />
+              <span>复制链接</span>
+            </>
+          )}
+        </button>
       </div>
     </div>
   )
