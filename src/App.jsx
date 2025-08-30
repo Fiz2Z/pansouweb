@@ -57,7 +57,7 @@ function App() {
         <main className="flex-1 container mx-auto px-4 max-w-6xl">
           {/* 首页状态 */}
           {!searchResults && !isLoading && !error && (
-            <div className="flex flex-col justify-center items-center min-h-[calc(100vh-200px)] py-8">
+            <div className="flex flex-col justify-center items-center min-h-[calc(100vh-160px)] py-4">
               {/* 主标题区域 */}
               <div className="text-center mb-12 animate-fade-in">
                 <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">

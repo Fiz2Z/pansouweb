@@ -22,11 +22,18 @@ const CLOUD_TYPE_CONFIG = {
 const CloudTypeTab = ({ type, count, isActive, onClick }) => {
   const config = CLOUD_TYPE_CONFIG[type] || { name: type, color: 'bg-gray-500' }
   
+  const handleClick = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onClick()
+  }
+  
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
+      onTouchStart={handleClick}
       className={`
-        flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all text-sm
+        flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all text-sm touch-manipulation
         ${isActive 
           ? 'bg-primary-600 text-white shadow-md' 
           : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
