@@ -1,7 +1,7 @@
 {
-  "name": "网盘搜索",
-  "short_name": "网盘搜索",
-  "description": "网盘资源搜索工具",
+  "name": "全网资源搜索",
+  "short_name": "全网资源搜索",
+  "description": "全网资源搜索工具",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#dbeafe",

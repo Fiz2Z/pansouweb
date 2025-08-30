@@ -74,9 +74,9 @@ const AboutModal = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">网盘搜索</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">全网资源搜索</h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  现代化的网盘资源搜索工具
+                  现代化的全网资源搜索工具
                 </p>
               </div>
 

@@ -63,7 +63,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
       <button
         onClick={() => setIsOpen(true)}
         className="flex items-center space-x-2 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-xl backdrop-blur-sm transition-all duration-200"
-        title="搜索设置"
+        title="资源搜索设置"
       >
         <Settings className="w-4 h-4" />
         <span className="hidden sm:inline text-sm">设置</span>
@@ -103,7 +103,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
                   <Settings className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">搜索设置</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">资源搜索设置</h2>
               </div>
               <button
                 onClick={handleCancel}
@@ -117,7 +117,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
             <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
               {/* 操作按钮 */}
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">网盘类型筛选</h3>
+                                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">资源平台筛选</h3>
                 <div className="flex gap-2">
                   <button
                     onClick={selectAll}
@@ -217,10 +217,10 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
                   </div>
                   <div>
                     <p className="text-sm text-blue-700 dark:text-blue-300">
-                      <span className="font-semibold">提示：</span>不选择任何网盘类型时，将搜索所有可用的网盘平台。选择特定类型可以缩小搜索范围，提高搜索精度。
+                      <span className="font-semibold">提示：</span>不选择任何资源类型时，将搜索所有可用的平台。选择特定类型可以缩小搜索范围，提高搜索精度。
                     </p>
                     <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                      当前已选择 <span className="font-semibold">{tempSelected.length}</span> 种网盘类型
+                      当前已选择 <span className="font-semibold">{tempSelected.length}</span> 种资源类型
                     </p>
                   </div>
                 </div>

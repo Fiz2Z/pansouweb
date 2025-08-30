@@ -54,7 +54,7 @@ const Header = ({ selectedCloudTypes, onCloudTypesChange }) => {
             <div className="text-primary-600 dark:text-primary-400">
               <Logo />
             </div>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">网盘搜索</h1>
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">全网资源搜索</h1>
             
             {/* API状态指示器 */}
             <div className="flex items-center space-x-2 ml-4">

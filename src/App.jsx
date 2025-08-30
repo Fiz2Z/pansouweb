@@ -138,10 +138,10 @@ function App() {
               {/* 主标题区域 */}
               <div className="mb-8 sm:mb-12 animate-fade-in">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-                  网盘搜索
+                  全网资源搜索
                 </h1>
                 <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-                  高效搜索全网网盘资源，支持多平台一键直达
+                  高效搜索全网资源，覆盖主流网盘平台
                 </p>
               </div>
 
