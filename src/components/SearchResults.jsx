@@ -107,74 +107,72 @@ const LinkCard = ({ link, cloudType }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 overflow-hidden flex flex-col h-full min-h-[220px]">
-      {/* 头部 - 网盘名称和日期 */}
-      <div className="px-3 py-2 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-100 dark:border-gray-600 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium text-white ${config.color}`}>
+    <div className="group bg-white dark:bg-gray-900 rounded-2xl shadow-sm border-0 ring-1 ring-gray-200/50 dark:ring-gray-700/50 hover:shadow-xl hover:ring-gray-300/50 dark:hover:ring-gray-600/50 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[200px] hover:-translate-y-1">
+      {/* 头部标签区域 */}
+      <div className="relative p-4 pb-2">
+        <div className="flex items-start justify-between mb-3">
+          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold text-white ${config.color} shadow-lg`}>
             {config.name}
           </span>
           {link.datetime && (
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">
               {formatDate(link.datetime)}
             </span>
           )}
         </div>
+        
+        {/* 资源标题 */}
+        <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 leading-snug hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer mb-3">
+          {link.note || '未命名资源'}
+        </h3>
       </div>
 
-      {/* 内容区域 */}
-      <div className="p-3 flex-grow flex flex-col">
-        {/* 资源标题 - 加大字体 */}
-        <div className="mb-3 flex-shrink-0">
-          <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 line-clamp-2 leading-tight hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer">
-            {link.note || '未命名资源'}
-          </h3>
-        </div>
-
-        {/* 图片预览区域 */}
-        {link.images && link.images.length > 0 && (
-          <div className="mb-3 flex-shrink-0">
-            <div className="grid grid-cols-2 gap-2 h-20">
-              {link.images.slice(0, 4).map((image, idx) => (
-                <div key={idx} className="relative bg-gray-100 dark:bg-gray-700 rounded-md overflow-hidden">
-                  {!imageError ? (
-                    <img
-                      src={image}
-                      alt={`预览图 ${idx + 1}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
-                      onError={() => setImageError(true)}
-                      onClick={() => window.open(image, '_blank')}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                      <ImageIcon className="w-4 h-4" />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            {link.images.length > 4 && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                +{link.images.length - 4} 张图片
-              </p>
-            )}
+      {/* 图片预览区域 */}
+      {link.images && link.images.length > 0 && (
+        <div className="px-4 pb-3">
+          <div className="grid grid-cols-2 gap-2 h-16 rounded-xl overflow-hidden">
+            {link.images.slice(0, 4).map((image, idx) => (
+              <div key={idx} className="relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden group/image">
+                {!imageError ? (
+                  <img
+                    src={image}
+                    alt={`预览图 ${idx + 1}`}
+                    className="w-full h-full object-cover group-hover/image:scale-110 transition-transform duration-500 cursor-pointer"
+                    onError={() => setImageError(true)}
+                    onClick={() => window.open(image, '_blank')}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <ImageIcon className="w-3 h-3" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300" />
+              </div>
+            ))}
           </div>
-        )}
+          {link.images.length > 4 && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
+              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-1.5"></span>
+              还有 {link.images.length - 4} 张图片
+            </p>
+          )}
+        </div>
+      )}
 
-        {/* 占位区域 */}
-        <div className="flex-grow"></div>
-      </div>
+      {/* 占位区域 */}
+      <div className="flex-grow"></div>
 
       {/* 底部操作区域 */}
-      <div className="p-3 border-t border-gray-100 dark:border-gray-600 flex-shrink-0 mt-auto">
-        <div className="flex items-center justify-between gap-2">
+      <div className="p-4 pt-2">
+        <div className="flex items-center justify-between gap-3">
           {/* 左侧提取码 */}
           {link.password ? (
             <button
               onClick={() => copyToClipboard(link.password, 'password')}
-              className="flex items-center gap-1.5 px-2 py-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded text-xs font-medium text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200/60 dark:border-red-700/60 rounded-xl text-xs font-semibold text-red-700 dark:text-red-300 hover:from-red-100 hover:to-orange-100 dark:hover:from-red-900/30 dark:hover:to-orange-900/30 transition-all duration-200 shadow-sm"
             >
-              <span>密码: {copiedItem === 'password' ? '已复制' : link.password}</span>
+              <Key className="w-3 h-3" />
+              <span>{copiedItem === 'password' ? '已复制' : link.password}</span>
             </button>
           ) : (
             <div></div>
@@ -184,7 +182,7 @@ const LinkCard = ({ link, cloudType }) => {
           {['magnet', 'torrent', 'thunder', 'ed2k'].includes(cloudType) ? (
             <button
               onClick={() => copyToClipboard(link.url, 'url')}
-              className="flex items-center gap-1 px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Copy className="w-3 h-3" />
               <span>{copiedItem === 'url' ? '已复制' : '复制链接'}</span>
@@ -192,9 +190,10 @@ const LinkCard = ({ link, cloudType }) => {
           ) : (
             <button
               onClick={openLink}
-              className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              直达
+              <ExternalLink className="w-3 h-3" />
+              <span>直达</span>
             </button>
           )}
         </div>
