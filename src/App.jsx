@@ -43,50 +43,45 @@ function App() {
     }
   }
 
+  const isHomepage = !searchResults && !isLoading && !error
+
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900"
-           style={{ 
-             overflow: (!searchResults && !isLoading && !error) ? 'hidden' : 'auto'
-           }}>
+      <div className={`${isHomepage ? 'h-screen homepage-no-scroll' : 'min-h-screen'} flex flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900`}>
         <Header 
           selectedCloudTypes={selectedCloudTypes}
           onCloudTypesChange={handleCloudTypesChange}
         />
         
-        <main className="flex-1 container mx-auto px-4 max-w-6xl">
-          {/* 首页状态 */}
-          {!searchResults && !isLoading && !error && (
-            <div className="flex flex-col h-[calc(100vh-100px)] max-h-screen overflow-hidden">
-              <div className="flex-1 flex flex-col justify-center items-center px-4 pb-4">
-                {/* 主标题区域 */}
-                <div className="text-center mb-4 sm:mb-6 animate-fade-in">
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-                    网盘搜索
-                  </h1>
-                  <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-                    高效搜索全网网盘资源，支持多平台一键直达
-                  </p>
-                </div>
-
-                {/* 搜索表单 */}
-                <div className="w-full max-w-3xl animate-fade-in animation-delay-200">
-                  <SearchForm 
-                    onSearch={handleSearch} 
-                    isLoading={isLoading}
-                    selectedCloudTypes={selectedCloudTypes}
-                  />
-                </div>
+        {/* 首页状态 */}
+        {isHomepage && (
+          <main className="flex-1 flex items-center justify-center px-4">
+            <div className="text-center w-full max-w-4xl -mt-8">
+              {/* 主标题区域 */}
+              <div className="mb-8 sm:mb-12 animate-fade-in">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+                  网盘搜索
+                </h1>
+                <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                  高效搜索全网网盘资源，支持多平台一键直达
+                </p>
               </div>
 
-
-
-
+              {/* 搜索表单 */}
+              <div className="w-full max-w-3xl mx-auto animate-fade-in animation-delay-200">
+                <SearchForm 
+                  onSearch={handleSearch} 
+                  isLoading={isLoading}
+                  selectedCloudTypes={selectedCloudTypes}
+                />
+              </div>
             </div>
-          )}
+          </main>
+        )}
 
-          {/* 搜索状态页面 */}
-          {(searchResults || isLoading || error) && (
+        {/* 搜索状态页面 */}
+        {!isHomepage && (
+          <main className="flex-1 container mx-auto px-4 max-w-6xl">
             <div className="py-8 space-y-8">
               {/* 搜索表单 */}
               <div className="animate-fade-in">
@@ -130,8 +125,8 @@ function App() {
                 </div>
               )}
             </div>
-          )}
-        </main>
+          </main>
+        )}
 
         <Footer />
         
