@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Search } from 'lucide-react'
 
-const SearchForm = ({ onSearch, isLoading, selectedCloudTypes }) => {
-  const [keyword, setKeyword] = useState('')
+const SearchForm = ({ onSearch, isLoading, selectedCloudTypes, keyword, onKeywordChange }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -33,7 +32,7 @@ const SearchForm = ({ onSearch, isLoading, selectedCloudTypes }) => {
           <input
             type="text"
             value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
+            onChange={(e) => onKeywordChange(e.target.value)}
             placeholder="搜索网盘资源..."
             className="w-full px-6 py-5 text-lg border-0 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-gray-200/60 dark:group-hover:shadow-gray-900/60 touch-manipulation"
             disabled={isLoading}

@@ -59,25 +59,61 @@ const LinkCard = ({ link, cloudType }) => {
 
   const copyToClipboard = async (text, type) => {
     try {
-      // 尝试使用现代 Clipboard API
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text)
-      } else {
-        // 备用方法，适用于不支持 Clipboard API 的环境
+      // iOS Safari 专门优化
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      
+      if (isIOS) {
+        // iOS 使用优化的方法
         const textArea = document.createElement('textarea')
         textArea.value = text
         textArea.style.position = 'fixed'
-        textArea.style.left = '-999999px'
-        textArea.style.top = '-999999px'
-        document.body.appendChild(textArea)
-        textArea.focus()
-        textArea.select()
+        textArea.style.left = '50%'
+        textArea.style.top = '50%'
+        textArea.style.width = '1px'
+        textArea.style.height = '1px'
+        textArea.style.padding = '0'
+        textArea.style.border = 'none'
+        textArea.style.outline = 'none'
+        textArea.style.boxShadow = 'none'
+        textArea.style.background = 'transparent'
+        textArea.setAttribute('readonly', '')
+        textArea.style.userSelect = 'text'
+        textArea.style.webkitUserSelect = 'text'
         
+        document.body.appendChild(textArea)
+        
+        // iOS 需要先聚焦
+        textArea.focus()
+        textArea.setSelectionRange(0, text.length)
+        
+        // 使用 execCommand 对 iOS 更可靠
         const successful = document.execCommand('copy')
-        textArea.remove()
+        document.body.removeChild(textArea)
         
         if (!successful) {
-          throw new Error('复制失败')
+          throw new Error('iOS复制失败')
+        }
+      } else {
+        // 非 iOS 设备使用现代 API
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text)
+        } else {
+          // 备用方法
+          const textArea = document.createElement('textarea')
+          textArea.value = text
+          textArea.style.position = 'fixed'
+          textArea.style.left = '-999999px'
+          textArea.style.top = '-999999px'
+          document.body.appendChild(textArea)
+          textArea.focus()
+          textArea.select()
+          
+          const successful = document.execCommand('copy')
+          textArea.remove()
+          
+          if (!successful) {
+            throw new Error('复制失败')
+          }
         }
       }
       
@@ -85,8 +121,18 @@ const LinkCard = ({ link, cloudType }) => {
       setTimeout(() => setCopiedItem(null), 2000)
     } catch (err) {
       console.error('复制失败:', err)
-      // 可以添加一个toast提示
-      alert('复制失败，请手动复制')
+      
+      // iOS 友好的错误处理
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        // 在 iOS 上显示更友好的提示
+        const confirmCopy = confirm(`复制失败，是否手动复制以下内容？\n\n${text}`)
+        if (confirmCopy) {
+          // 用户确认后，再次尝试显示内容供手动复制
+          prompt('请手动复制以下内容：', text)
+        }
+      } else {
+        alert('复制失败，请手动复制')
+      }
     }
   }
 

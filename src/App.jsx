@@ -13,6 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [searchProgress, setSearchProgress] = useState({ current: 0, total: 0 })
+  const [keyword, setKeyword] = useState('')
   const [selectedCloudTypes, setSelectedCloudTypes] = useState(() => {
     try {
       const saved = localStorage.getItem('selectedCloudTypes')
@@ -150,6 +151,8 @@ function App() {
                   onSearch={handleSearch} 
                   isLoading={isLoading}
                   selectedCloudTypes={selectedCloudTypes}
+                  keyword={keyword}
+                  onKeywordChange={setKeyword}
                 />
               </div>
             </div>
@@ -166,6 +169,8 @@ function App() {
                   onSearch={handleSearch} 
                   isLoading={isLoading}
                   selectedCloudTypes={selectedCloudTypes}
+                  keyword={keyword}
+                  onKeywordChange={setKeyword}
                 />
               </div>
 
