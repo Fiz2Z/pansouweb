@@ -4,20 +4,9 @@ import { Github, Star, ExternalLink } from 'lucide-react'
 const Footer = () => {
   return (
     <footer className="border-t border-gray-200/30 dark:border-gray-700/50 flex-shrink-0">
-      <div className="container mx-auto px-4 py-3 max-w-6xl">
+      <div className="container mx-auto px-4 py-1 max-w-6xl">
         <div className="text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Made with ❤️ by <span className="font-semibold text-blue-600 dark:text-blue-400">Yuccc</span>
-            <span className="mx-2">•</span>
-            基于 <a
-              href="https://github.com/fish2018/pansou"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors underline"
-            >
-              PanSou API
-            </a> 构建
-          </p>
+          {/* 空的Footer，只保留边框分隔 */}
         </div>
       </div>
     </footer>

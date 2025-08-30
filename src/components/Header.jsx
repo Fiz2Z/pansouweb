@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
 import SettingsModal from './SettingsModal'
+import AboutModal from './AboutModal'
 import { checkApiHealth } from '../services/api'
 
 const Logo = () => (
@@ -69,6 +70,7 @@ const Header = ({ selectedCloudTypes, onCloudTypesChange }) => {
               selectedCloudTypes={selectedCloudTypes}
               onCloudTypesChange={onCloudTypesChange}
             />
+            <AboutModal />
             <ThemeToggle />
           </div>
         </div>
