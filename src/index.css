@@ -6,7 +6,6 @@
   html {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     height: 100%;
-    overflow: hidden;
   }
   
   body {
@@ -14,25 +13,16 @@
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
   }
   
   #root {
     height: 100%;
-    overflow: hidden;
   }
   
   /* 首页隐藏滚动条 */
   .homepage-no-scroll {
     height: 100vh;
-    overflow: hidden !important;
-  }
-  
-  /* 搜索页面允许滚动 */
-  .search-page-scroll {
-    height: auto;
-    min-height: 100vh;
-    overflow: auto;
+    overflow: hidden;
   }
   
   /* 移动端触摸优化 */

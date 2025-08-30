@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import SearchForm from './components/SearchForm'
 import SearchResults from './components/SearchResults'
 import Header from './components/Header'
@@ -123,26 +123,9 @@ function App() {
 
   const isHomepage = !searchResults && !isLoading && !error
 
-  // 动态控制body的overflow
-  useEffect(() => {
-    if (isHomepage) {
-      document.body.style.overflow = 'hidden'
-      document.documentElement.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-      document.documentElement.style.overflow = 'auto'
-    }
-    
-    // 清理函数
-    return () => {
-      document.body.style.overflow = 'auto'
-      document.documentElement.style.overflow = 'auto'
-    }
-  }, [isHomepage])
-
   return (
     <ThemeProvider>
-      <div className={`${isHomepage ? 'h-screen homepage-no-scroll' : 'search-page-scroll'} flex flex-col bg-gradient-to-br from-blue-200/90 via-slate-200/70 to-purple-200/80 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900`}>
+      <div className={`${isHomepage ? 'h-screen homepage-no-scroll' : 'min-h-screen'} flex flex-col bg-gradient-to-br from-blue-200/90 via-slate-200/70 to-purple-200/80 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900`}>
         <Header 
           selectedCloudTypes={selectedCloudTypes}
           onCloudTypesChange={handleCloudTypesChange}
