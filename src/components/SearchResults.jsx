@@ -59,46 +59,58 @@ const LinkCard = ({ link, cloudType }) => {
 
   const copyToClipboard = async (text, type) => {
     try {
-      // iOS Safari 专门优化
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
       
       if (isIOS) {
-        // iOS 使用优化的方法
-        const textArea = document.createElement('textarea')
-        textArea.value = text
-        textArea.style.position = 'fixed'
-        textArea.style.left = '50%'
-        textArea.style.top = '50%'
-        textArea.style.width = '1px'
-        textArea.style.height = '1px'
-        textArea.style.padding = '0'
-        textArea.style.border = 'none'
-        textArea.style.outline = 'none'
-        textArea.style.boxShadow = 'none'
-        textArea.style.background = 'transparent'
-        textArea.setAttribute('readonly', '')
-        textArea.style.userSelect = 'text'
-        textArea.style.webkitUserSelect = 'text'
-        
-        document.body.appendChild(textArea)
-        
-        // iOS 需要先聚焦
-        textArea.focus()
-        textArea.setSelectionRange(0, text.length)
-        
-        // 使用 execCommand 对 iOS 更可靠
-        const successful = document.execCommand('copy')
-        document.body.removeChild(textArea)
-        
-        if (!successful) {
-          throw new Error('iOS复制失败')
-        }
+        // iOS 最佳实践方法
+        return new Promise((resolve, reject) => {
+          const textArea = document.createElement('textarea')
+          textArea.value = text
+          
+          // 关键：让元素可见但不影响布局
+          textArea.style.position = 'absolute'
+          textArea.style.left = '0'
+          textArea.style.top = '0'
+          textArea.style.width = '2em'
+          textArea.style.height = '2em'
+          textArea.style.padding = '0'
+          textArea.style.border = 'none'
+          textArea.style.outline = 'none'
+          textArea.style.boxShadow = 'none'
+          textArea.style.background = 'transparent'
+          textArea.style.fontSize = '16px' // 防止iOS缩放
+          textArea.style.zIndex = '-1'
+          textArea.setAttribute('readonly', '')
+          
+          document.body.appendChild(textArea)
+          
+          // 重要：使用 requestAnimationFrame 确保DOM更新
+          requestAnimationFrame(() => {
+            try {
+              textArea.select()
+              textArea.setSelectionRange(0, text.length)
+              
+              const successful = document.execCommand('copy')
+              document.body.removeChild(textArea)
+              
+              if (successful) {
+                setCopiedItem(type)
+                setTimeout(() => setCopiedItem(null), 2000)
+                resolve()
+              } else {
+                reject(new Error('iOS复制失败'))
+              }
+            } catch (error) {
+              document.body.removeChild(textArea)
+              reject(error)
+            }
+          })
+        })
       } else {
-        // 非 iOS 设备使用现代 API
+        // 非 iOS 设备
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(text)
         } else {
-          // 备用方法
           const textArea = document.createElement('textarea')
           textArea.value = text
           textArea.style.position = 'fixed'
@@ -115,20 +127,21 @@ const LinkCard = ({ link, cloudType }) => {
             throw new Error('复制失败')
           }
         }
+        
+        setCopiedItem(type)
+        setTimeout(() => setCopiedItem(null), 2000)
       }
       
-      setCopiedItem(type)
-      setTimeout(() => setCopiedItem(null), 2000)
     } catch (err) {
       console.error('复制失败:', err)
       
-      // iOS 友好的错误处理
+      // 更友好的错误处理
       if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-        // 在 iOS 上显示更友好的提示
-        const confirmCopy = confirm(`复制失败，是否手动复制以下内容？\n\n${text}`)
-        if (confirmCopy) {
-          // 用户确认后，再次尝试显示内容供手动复制
-          prompt('请手动复制以下内容：', text)
+        // iOS: 直接显示内容让用户手动复制
+        const userWantsCopy = confirm('自动复制失败，点击确定查看内容进行手动复制')
+        if (userWantsCopy) {
+          // 使用 prompt 显示内容，用户可以手动选择复制
+          prompt('请长按选择并复制以下内容：', text)
         }
       } else {
         alert('复制失败，请手动复制')
