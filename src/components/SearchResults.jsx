@@ -113,12 +113,8 @@ const LinkCard = ({ link, cloudType }) => {
     e.preventDefault()
     e.stopPropagation()
     
-    // iOS Safari 优化：直接跳转而不是新窗口
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      window.location.href = link.url
-    } else {
-      window.open(link.url, '_blank', 'noopener,noreferrer')
-    }
+    // 所有设备都使用新标签页打开
+    window.open(link.url, '_blank', 'noopener,noreferrer')
   }
 
   return (

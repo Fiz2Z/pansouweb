@@ -11,13 +11,16 @@ const CLOUD_TYPES = [
   { value: '115', label: '115网盘', color: 'bg-yellow-500' },
   { value: 'pikpak', label: 'PikPak', color: 'bg-pink-500' },
   { value: 'xunlei', label: '迅雷网盘', color: 'bg-indigo-500' },
-  { value: 'thunder', label: 'Thunder', color: 'bg-indigo-600' },
   { value: '123', label: '123网盘', color: 'bg-cyan-500' },
-  { value: 'magnet', label: '磁力链接', color: 'bg-gray-500' },
-  { value: 'ed2k', label: 'ED2K链接', color: 'bg-gray-600' },
   { value: 'mobile', label: '移动云盘', color: 'bg-teal-500' },
-  { value: 'lanzou', label: '蓝奏云盘', color: 'bg-blue-600' },
-  { value: 'torrent', label: 'Torrent', color: 'bg-gray-700' }
+  { value: 'lanzou', label: '蓝奏云盘', color: 'bg-blue-600' }
+]
+
+const OTHER_TYPES = [
+  { value: 'magnet', label: '磁力链接', color: 'bg-gray-500' },
+  { value: 'torrent', label: 'Torrent', color: 'bg-gray-700' },
+  { value: 'thunder', label: 'Thunder', color: 'bg-indigo-600' },
+  { value: 'ed2k', label: 'ED2K链接', color: 'bg-gray-600' }
 ]
 
 const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
@@ -37,7 +40,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
   }
 
   const selectAll = () => {
-    setTempSelected(CLOUD_TYPES.map(type => type.value))
+    setTempSelected([...CLOUD_TYPES.map(type => type.value), ...OTHER_TYPES.map(type => type.value)])
   }
 
   const clearAll = () => {
@@ -132,7 +135,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
               </div>
 
               {/* 网盘类型网格 */}
-              <div className="grid grid-cols-5 gap-3 mb-4">
+              <div className="grid grid-cols-4 gap-3 mb-6">
                 {CLOUD_TYPES.map((cloudType) => (
                   <label
                     key={cloudType.value}
@@ -164,6 +167,46 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
                     </span>
                   </label>
                 ))}
+              </div>
+
+              {/* 其他类型筛选 */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">其他类型筛选</h3>
+                </div>
+                <div className="grid grid-cols-4 gap-3">
+                  {OTHER_TYPES.map((otherType) => (
+                    <label
+                      key={otherType.value}
+                      className={`flex flex-col items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all duration-200 ${
+                        tempSelected.includes(otherType.value)
+                          ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                          : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-purple-300 dark:hover:border-purple-600'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={tempSelected.includes(otherType.value)}
+                        onChange={() => toggleCloudType(otherType.value)}
+                        className="sr-only"
+                      />
+                      
+                      {/* 类型图标 */}
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${otherType.color} text-white text-sm font-bold`}>
+                        {otherType.label.charAt(0)}
+                      </div>
+
+                      {/* 类型名称 */}
+                      <span className={`text-xs font-medium text-center transition-colors ${
+                        tempSelected.includes(otherType.value)
+                          ? 'text-purple-700 dark:text-purple-300'
+                          : 'text-gray-600 dark:text-gray-300'
+                      }`}>
+                        {otherType.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
 
               {/* 提示信息 */}
