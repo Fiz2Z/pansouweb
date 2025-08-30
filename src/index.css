@@ -24,6 +24,23 @@
     height: 100vh;
     overflow: hidden;
   }
+  
+  /* 移动端触摸优化 */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  
+  input, button, [role="button"] {
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  input {
+    -webkit-user-select: text;
+    user-select: text;
+  }
 }
 
 @layer components {
