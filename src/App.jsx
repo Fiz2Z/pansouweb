@@ -124,7 +124,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className={`${isHomepage ? 'h-screen homepage-no-scroll' : 'min-h-screen'} flex flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900`}>
+      <div className={`${isHomepage ? 'h-screen homepage-no-scroll' : 'min-h-screen'} flex flex-col bg-gradient-to-br from-blue-200/90 via-slate-200/70 to-purple-200/80 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900`}>
         <Header 
           selectedCloudTypes={selectedCloudTypes}
           onCloudTypesChange={handleCloudTypesChange}

@@ -46,7 +46,7 @@ const Header = ({ selectedCloudTypes, onCloudTypesChange }) => {
   }
 
   return (
-    <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-700/50">
+    <header className="border-b border-gray-200/30 dark:border-gray-700/50">
       <div className="container mx-auto px-4 py-4 max-w-6xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
