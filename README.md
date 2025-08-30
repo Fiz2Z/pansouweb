@@ -50,7 +50,7 @@ npm install
 npm run dev
 ```
 
-应用将在 http://localhost:3000 启动。
+应用将在 http://localhost:5173 启动。
 
 ### 构建生产版本
 
@@ -81,11 +81,11 @@ npm run dev
 #### 使用预构建镜像（推荐）
 ```bash
 # 拉取并运行预构建镜像
-docker run -d -p 3000:80 -e API_DOMAIN=your-domain.com ghcr.io/your-username/your-repo:latest
+docker run -d -p 3000:80 -e API_DOMAIN=your-domain.com ghcr.io/yuucccc/sousou:latest
 
 # 或使用 docker-compose
 # 修改 docker-compose.yml 中的 image 字段
-# image: ghcr.io/your-username/your-repo:latest
+# image: ghcr.io/yuucccc/sousou:latest
 docker-compose up -d
 ```
 
@@ -163,21 +163,21 @@ src/
 
 ```bash
 # 拉取最新镜像
-docker pull ghcr.io/your-username/your-repo:latest
+docker pull ghcr.io/yuucccc/sousou:latest
 
 # 运行容器
 docker run -d \
-  --name netdisk-search \
+  --name sousouweb \
   -p 3000:80 \
   -e API_DOMAIN=your-domain.com \
-  ghcr.io/your-username/your-repo:latest
+  ghcr.io/yuucccc/sousou:latest
 ```
 
 ### 环境变量说明
 
 | 变量名 | 说明 | 默认值 | 示例 |
 |--------|------|--------|------|
-| `API_DOMAIN` | API服务域名 | `104.194.69.89` | `api.example.com` |
+| `API_DOMAIN` | API服务域名 | `localhost` | `api.example.com` |
 
 ## 致谢
 
