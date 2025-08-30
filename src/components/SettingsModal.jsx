@@ -47,6 +47,26 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
     setTempSelected([])
   }
 
+  const selectAllCloudTypes = () => {
+    const otherSelected = tempSelected.filter(type => OTHER_TYPES.some(ot => ot.value === type))
+    setTempSelected([...CLOUD_TYPES.map(type => type.value), ...otherSelected])
+  }
+
+  const clearAllCloudTypes = () => {
+    const otherSelected = tempSelected.filter(type => OTHER_TYPES.some(ot => ot.value === type))
+    setTempSelected(otherSelected)
+  }
+
+  const selectAllOtherTypes = () => {
+    const cloudSelected = tempSelected.filter(type => CLOUD_TYPES.some(ct => ct.value === type))
+    setTempSelected([...cloudSelected, ...OTHER_TYPES.map(type => type.value)])
+  }
+
+  const clearAllOtherTypes = () => {
+    const cloudSelected = tempSelected.filter(type => CLOUD_TYPES.some(ct => ct.value === type))
+    setTempSelected(cloudSelected)
+  }
+
   const handleSave = () => {
     onCloudTypesChange(tempSelected)
     setIsOpen(false)
@@ -90,15 +110,16 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
           
           {/* 弹窗内容 */}
           <div 
-            className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 dark:border-gray-700 animate-slide-up"
+            className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 dark:border-gray-700 animate-slide-up flex flex-col"
             style={{ 
-              maxHeight: 'calc(100vh - 4rem)',
+              maxHeight: 'calc(100vh - 2rem)',
+              height: 'auto',
               position: 'relative',
               zIndex: 1
             }}
           >
             {/* 头部 */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
                   <Settings className="w-4 h-4 text-white" />
@@ -114,20 +135,22 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
             </div>
 
             {/* 内容区域 */}
-            <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
-              {/* 操作按钮 */}
-              <div className="flex items-center justify-between mb-4">
-                                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">资源平台筛选</h3>
-                <div className="flex gap-2">
+            <div className="p-4 sm:p-6 overflow-y-auto flex-grow" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+              
+
+              {/* 网盘平台操作按钮 */}
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-xs font-medium text-gray-600 dark:text-gray-400">网盘平台</h4>
+                <div className="flex gap-1">
                   <button
-                    onClick={selectAll}
-                    className="px-3 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors font-medium"
+                    onClick={selectAllCloudTypes}
+                    className="px-2 py-0.5 text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
                   >
                     全选
                   </button>
                   <button
-                    onClick={clearAll}
-                    className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium"
+                    onClick={clearAllCloudTypes}
+                    className="px-2 py-0.5 text-xs bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 rounded hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors"
                   >
                     清空
                   </button>
@@ -172,7 +195,21 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
               {/* 其他类型筛选 */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">其他类型筛选</h3>
+                  <h4 className="text-xs font-medium text-gray-600 dark:text-gray-400">其他类型</h4>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={selectAllOtherTypes}
+                      className="px-2 py-0.5 text-xs bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
+                    >
+                      全选
+                    </button>
+                    <button
+                      onClick={clearAllOtherTypes}
+                      className="px-2 py-0.5 text-xs bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 rounded hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors"
+                    >
+                      清空
+                    </button>
+                  </div>
                 </div>
                 <div className="grid grid-cols-4 gap-3">
                   {OTHER_TYPES.map((otherType) => (
@@ -228,7 +265,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
             </div>
 
             {/* 底部按钮 */}
-            <div className="flex gap-3 p-6 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex gap-3 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
               <button
                 onClick={handleCancel}
                 className="flex-1 px-4 py-3 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"

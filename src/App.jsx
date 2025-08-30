@@ -134,10 +134,10 @@ function App() {
         {/* 首页状态 */}
         {isHomepage && (
           <main className="flex-1 flex items-center justify-center px-4">
-            <div className="text-center w-full max-w-4xl -mt-8">
+            <div className="text-center w-full max-w-4xl -mt-16">
               {/* 主标题区域 */}
-              <div className="mb-8 sm:mb-12 animate-fade-in">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+              <div className="mb-6 sm:mb-8 animate-fade-in">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-3">
                   全网资源搜索
                 </h1>
                 <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -146,7 +146,7 @@ function App() {
               </div>
 
               {/* 搜索表单 */}
-              <div className="w-full max-w-3xl mx-auto animate-fade-in animation-delay-200">
+              <div className="w-full max-w-3xl mx-auto mb-8 animate-fade-in animation-delay-200">
                 <SearchForm 
                   onSearch={handleSearch} 
                   isLoading={isLoading}
@@ -154,6 +154,49 @@ function App() {
                   keyword={keyword}
                   onKeywordChange={setKeyword}
                 />
+              </div>
+
+              {/* 项目特点 */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto animate-fade-in animation-delay-400">
+                <div className="text-center p-4 rounded-xl bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border border-white/40 dark:border-gray-600/40">
+                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">极速搜索</h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">毫秒级响应</p>
+                </div>
+
+                <div className="text-center p-4 rounded-xl bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border border-white/40 dark:border-gray-600/40">
+                  <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">多平台</h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">多种平台</p>
+                </div>
+
+                <div className="text-center p-4 rounded-xl bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border border-white/40 dark:border-gray-600/40">
+                  <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">安全可靠</h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">无需注册</p>
+                </div>
+
+                <div className="text-center p-4 rounded-xl bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border border-white/40 dark:border-gray-600/40">
+                  <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">PWA支持</h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">安装到桌面</p>
+                </div>
               </div>
             </div>
           </main>
