@@ -34,7 +34,7 @@ const SearchForm = ({ onSearch, isLoading, selectedCloudTypes, keyword, onKeywor
             value={keyword}
             onChange={(e) => onKeywordChange(e.target.value)}
             placeholder="搜索全网资源..."
-            className="w-full px-6 py-5 text-lg border-0 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-gray-200/60 dark:group-hover:shadow-gray-900/60 touch-manipulation"
+            className="w-full px-6 py-5 text-lg rounded-2xl bg-white/20 dark:bg-gray-800/30 backdrop-blur-xl border-2 border-white/90 dark:border-gray-400/90 text-gray-900 dark:text-gray-100 placeholder-gray-600 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 focus:bg-white/30 dark:focus:bg-gray-800/40 focus:border-white dark:focus:border-gray-300 shadow-lg shadow-gray-200/30 dark:shadow-gray-900/30 transition-all duration-300 group-hover:shadow-xl group-hover:bg-white/25 dark:group-hover:bg-gray-800/35 group-hover:border-white/95 dark:group-hover:border-gray-400/95 touch-manipulation"
             disabled={isLoading}
             onTouchStart={(e) => e.target.focus()}
           />
