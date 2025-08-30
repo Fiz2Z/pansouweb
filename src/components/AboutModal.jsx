@@ -9,6 +9,19 @@ const AboutModal = () => {
     setIsOpen(false)
   }
 
+  // 从环境变量获取配置
+  const authorName = import.meta.env.VITE_AUTHOR_NAME || 
+                   (window.__APP_CONFIG__ && window.__APP_CONFIG__.AUTHOR_NAME) || 
+                   'Yuccc'
+  
+  const blogUrl = import.meta.env.VITE_BLOG_URL || 
+                 (window.__APP_CONFIG__ && window.__APP_CONFIG__.BLOG_URL) || 
+                 null
+
+  const blogName = import.meta.env.VITE_BLOG_NAME || 
+                  (window.__APP_CONFIG__ && window.__APP_CONFIG__.BLOG_NAME) || 
+                  'Blog'
+
   return (
     <>
       {/* 关于按钮 */}
@@ -70,8 +83,9 @@ const AboutModal = () => {
               {/* 应用信息 */}
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white">
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">全网资源搜索</h3>
@@ -85,7 +99,7 @@ const AboutModal = () => {
                 <div className="flex items-center justify-center gap-2 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200/50 dark:border-blue-800/50">
                   <Heart className="w-4 h-4 text-red-500" />
                   <span className="text-sm text-gray-700 dark:text-gray-300">
-                    Made with ❤️ by <span className="font-semibold text-blue-600 dark:text-blue-400">Yuccc</span>
+                    Made with ❤️ by <span className="font-semibold text-blue-600 dark:text-blue-400">{authorName}</span>
                   </span>
                 </div>
 
@@ -99,6 +113,7 @@ const AboutModal = () => {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors text-sm"
                     >
+                      <Github className="w-3 h-3" />
                       <span>PanSou API</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
@@ -117,6 +132,21 @@ const AboutModal = () => {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
+
+                  {blogUrl && (
+                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">博客</span>
+                      <a
+                        href={blogUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors text-sm"
+                      >
+                        <span>{blogName}</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  )}
 
                   <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">版本</span>

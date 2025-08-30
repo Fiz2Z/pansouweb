@@ -4,7 +4,10 @@ set -e
 # 生成配置文件，将环境变量注入到前端应用
 cat > /usr/share/nginx/html/config.js << EOF
 window.__APP_CONFIG__ = {
-  API_DOMAIN: '${API_DOMAIN:-localhost}'
+  API_DOMAIN: '${API_DOMAIN:-localhost}',
+  AUTHOR_NAME: '${AUTHOR_NAME:-Yuccc}',
+  BLOG_URL: '${BLOG_URL:-}',
+  BLOG_NAME: '${BLOG_NAME:-Blog}'
 };
 EOF
 

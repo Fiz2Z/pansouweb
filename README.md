@@ -100,20 +100,28 @@ http://localhost:3000
 
 ### 环境变量配置
 
-可以通过环境变量配置API域名：
+支持通过环境变量自定义配置：
 
 ```bash
-# 设置API域名（不包含端口，端口固定为8888）
-export API_DOMAIN=your-domain.com
+# 开发环境 - 创建 .env 文件
+VITE_API_DOMAIN=localhost
+VITE_AUTHOR_NAME=Yuccc
+VITE_BLOG_URL=https://your-blog.com
+VITE_BLOG_NAME=我的技术博客
 
-# 或在 docker-compose.yml 中设置
+# Docker 部署 - 在 docker-compose.yml 中设置
 environment:
   - API_DOMAIN=your-domain.com
+  - AUTHOR_NAME=Your Name
+  - BLOG_URL=https://your-blog.com
+  - BLOG_NAME=Your Blog Name
 
 # 支持完整URL（包含协议和端口）
 environment:
   - API_DOMAIN=https://your-domain.com:8888
 ```
+
+详细配置说明请参考 [环境变量配置文档](docs/ENVIRONMENT.md)。
 
 ### PWA 功能
 
@@ -178,6 +186,9 @@ docker run -d \
 | 变量名 | 说明 | 默认值 | 示例 |
 |--------|------|--------|------|
 | `API_DOMAIN` | API服务域名 | `localhost` | `api.example.com` |
+| `AUTHOR_NAME` | 作者名称 | `Yuccc` | `张三` |
+| `BLOG_URL` | 博客地址 | `null` | `https://blog.example.com` |
+| `BLOG_NAME` | 博客名称 | `Blog` | `我的技术博客` |
 
 ## 致谢
 

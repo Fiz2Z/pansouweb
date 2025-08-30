@@ -11,7 +11,7 @@ const Logo = () => (
   </svg>
 )
 
-const Header = ({ selectedCloudTypes, onCloudTypesChange }) => {
+const Header = ({ selectedCloudTypes, onCloudTypesChange, isSettingsOpen, setIsSettingsOpen }) => {
   const [apiStatus, setApiStatus] = useState('checking') // 'checking', 'online', 'offline'
 
   useEffect(() => {
@@ -69,6 +69,8 @@ const Header = ({ selectedCloudTypes, onCloudTypesChange }) => {
             <SettingsModal 
               selectedCloudTypes={selectedCloudTypes}
               onCloudTypesChange={onCloudTypesChange}
+              isOpen={isSettingsOpen}
+              setIsOpen={setIsSettingsOpen}
             />
             <AboutModal />
             <ThemeToggle />

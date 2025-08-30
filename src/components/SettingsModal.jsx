@@ -23,8 +23,7 @@ const OTHER_TYPES = [
   { value: 'ed2k', label: 'ED2K链接', color: 'bg-gray-600' }
 ]
 
-const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange }) => {
-  const [isOpen, setIsOpen] = useState(false)
+const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOpen }) => {
   const [tempSelected, setTempSelected] = useState(selectedCloudTypes)
 
   useEffect(() => {

@@ -53,7 +53,6 @@ const CloudTypeTab = ({ type, count, isActive, onClick }) => {
 
 const LinkCard = ({ link, cloudType }) => {
   const [copiedItem, setCopiedItem] = useState(null)
-  const [imageError, setImageError] = useState(false)
   
   const config = CLOUD_TYPE_CONFIG[cloudType] || { name: cloudType, color: 'bg-gray-500', icon: '📁' }
 
@@ -177,7 +176,7 @@ const LinkCard = ({ link, cloudType }) => {
   }
 
   return (
-    <div className="group bg-white dark:bg-gray-900 rounded-2xl shadow-sm border-0 ring-1 ring-gray-200/50 dark:ring-gray-700/50 hover:shadow-xl hover:ring-gray-300/50 dark:hover:ring-gray-600/50 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[200px] hover:-translate-y-1">
+    <div className="group bg-white dark:bg-gray-900 rounded-2xl shadow-sm border-0 ring-1 ring-gray-200/50 dark:ring-gray-700/50 hover:shadow-xl hover:ring-gray-300/50 dark:hover:ring-gray-600/50 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[160px] hover:-translate-y-1">
       {/* 头部标签区域 */}
       <div className="relative p-4 pb-2">
         <div className="flex items-start justify-between mb-3">
@@ -197,37 +196,7 @@ const LinkCard = ({ link, cloudType }) => {
         </h3>
       </div>
 
-      {/* 图片预览区域 */}
-      {link.images && link.images.length > 0 && (
-        <div className="px-4 pb-3">
-          <div className="grid grid-cols-2 gap-2 h-16 rounded-xl overflow-hidden">
-            {link.images.slice(0, 4).map((image, idx) => (
-              <div key={idx} className="relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden group/image">
-                {!imageError ? (
-                  <img
-                    src={image}
-                    alt={`预览图 ${idx + 1}`}
-                    className="w-full h-full object-cover group-hover/image:scale-110 transition-transform duration-500 cursor-pointer"
-                    onError={() => setImageError(true)}
-                    onClick={() => window.open(image, '_blank')}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <ImageIcon className="w-3 h-3" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300" />
-              </div>
-            ))}
-          </div>
-          {link.images.length > 4 && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-1.5"></span>
-              还有 {link.images.length - 4} 张图片
-            </p>
-          )}
-        </div>
-      )}
+
 
       {/* 占位区域 */}
       <div className="flex-grow"></div>
@@ -291,9 +260,89 @@ const LinkCard = ({ link, cloudType }) => {
   )
 }
 
-const SearchResults = ({ results }) => {
-  const [activeTab, setActiveTab] = useState(null)
+const IntegratedCloudCard = ({ type, links, config }) => {
+  const [isExpanded, setIsExpanded] = useState(true)
+  const [showAll, setShowAll] = useState(false)
+  
+  const displayLinks = showAll ? links : links.slice(0, 3)
+  const hasMore = links.length > 3
 
+  return (
+    <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/40 dark:border-gray-600/40 overflow-hidden animate-fade-in">
+      {/* 卡片头部 */}
+      <div 
+        className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className="flex items-center gap-3">
+          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold text-white ${config.color} shadow-sm`}>
+            {config.name}
+          </span>
+          <span className="text-lg font-bold text-gray-900 dark:text-white">
+            {links.length} 条资源
+          </span>
+        </div>
+        
+        <svg 
+          className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+
+      {/* 卡片内容 */}
+      {isExpanded && (
+        <div className="border-t border-white/30 dark:border-gray-600/30">
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {displayLinks.map((link, index) => (
+              <div 
+                key={index}
+                className="animate-fade-in"
+                style={{ 
+                  animationDelay: `${index * 50}ms`,
+                  animationFillMode: 'both'
+                }}
+              >
+                <LinkCard link={link} cloudType={type} />
+              </div>
+            ))}
+          </div>
+          
+          {/* 查看全部按钮 */}
+          {hasMore && (
+            <div className="border-t border-white/20 dark:border-gray-600/20 p-3">
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-700 dark:text-blue-300 rounded-xl hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 transition-all duration-200 font-medium"
+              >
+                {showAll ? (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
+                    </svg>
+                    <span>收起 ({links.length - 3} 条)</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    <span>查看全部 {links.length} 条资源</span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+const SearchResults = ({ results }) => {
   // 获取可用的网盘类型和数量，并按资源数量降序排列
   const cloudTypes = results?.merged_by_type 
     ? Object.keys(results.merged_by_type).sort((a, b) => {
@@ -302,15 +351,6 @@ const SearchResults = ({ results }) => {
         return countB - countA // 降序排列
       })
     : []
-  
-  // 设置默认激活的标签页
-  React.useEffect(() => {
-    if (cloudTypes.length > 0 && !activeTab) {
-      setActiveTab(cloudTypes[0])
-    }
-  }, [cloudTypes, activeTab])
-
-  const activeLinks = activeTab ? results?.merged_by_type?.[activeTab] || [] : []
 
   if (!results || !results.merged_by_type || Object.keys(results.merged_by_type).length === 0) {
     return (
@@ -332,8 +372,6 @@ const SearchResults = ({ results }) => {
         </div>
       </div>
 
-
-
       {cloudTypes.length === 0 ? (
         <div className="text-center py-12">
           <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -345,58 +383,22 @@ const SearchResults = ({ results }) => {
           </p>
         </div>
       ) : (
-        <>
-          {/* 网盘类型标签页 */}
-          <div className="flex flex-wrap gap-3">
-            {cloudTypes.map(type => (
-              <CloudTypeTab
+        <div className="space-y-4">
+          {/* 整合卡片列表 */}
+          {cloudTypes.map(type => {
+            const links = results.merged_by_type[type] || []
+            const config = CLOUD_TYPE_CONFIG[type] || { name: type, color: 'bg-gray-500' }
+            
+            return (
+              <IntegratedCloudCard
                 key={type}
                 type={type}
-                count={results.merged_by_type[type]?.length || 0}
-                isActive={activeTab === type}
-                onClick={() => setActiveTab(type)}
+                links={links}
+                config={config}
               />
-            ))}
-          </div>
-
-          {/* 当前标签页的结果 */}
-          {activeTab && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  {CLOUD_TYPE_CONFIG[activeTab]?.name || activeTab} 
-                  <span className="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
-                    ({activeLinks.length} 个链接)
-                  </span>
-                </h3>
-              </div>
-
-              {activeLinks.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  该网盘类型下暂无结果
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {activeLinks.map((link, index) => (
-                    <div 
-                      key={`${activeTab}-${index}`}
-                      className="animate-fade-in"
-                      style={{ 
-                        animationDelay: `${index * 50}ms`,
-                        animationFillMode: 'both'
-                      }}
-                    >
-                      <LinkCard
-                        link={link}
-                        cloudType={activeTab}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </>
+            )
+          })}
+        </div>
       )}
     </div>
   )
