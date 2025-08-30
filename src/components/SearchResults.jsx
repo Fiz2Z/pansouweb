@@ -109,8 +109,16 @@ const LinkCard = ({ link, cloudType }) => {
     }
   }
 
-  const openLink = () => {
-    window.open(link.url, '_blank', 'noopener,noreferrer')
+  const openLink = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    // iOS Safari 优化：直接跳转而不是新窗口
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      window.location.href = link.url
+    } else {
+      window.open(link.url, '_blank', 'noopener,noreferrer')
+    }
   }
 
   return (
@@ -214,16 +222,8 @@ const LinkCard = ({ link, cloudType }) => {
             </button>
           ) : (
             <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                openLink()
-              }}
-              onTouchStart={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                openLink()
-              }}
+              onClick={openLink}
+              onTouchStart={openLink}
               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl touch-manipulation"
             >
               <ExternalLink className="w-3 h-3" />
