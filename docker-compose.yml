@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  netdisk-search:
+  sousouweb:
     build: .
-    container_name: netdisk-search
+    container_name: sousouweb
     ports:
       - "3000:80"
     environment:
-      - API_DOMAIN=https://x.x.x.x:8888
+      - API_DOMAIN=localhost
     restart: unless-stopped

@@ -175,8 +175,17 @@ const LinkCard = ({ link, cloudType }) => {
           {/* 左侧提取码 */}
           {link.password ? (
             <button
-              onClick={() => copyToClipboard(link.password, 'password')}
-              className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200/60 dark:border-red-700/60 rounded-xl text-xs font-semibold text-red-700 dark:text-red-300 hover:from-red-100 hover:to-orange-100 dark:hover:from-red-900/30 dark:hover:to-orange-900/30 transition-all duration-200 shadow-sm"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                copyToClipboard(link.password, 'password')
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                copyToClipboard(link.password, 'password')
+              }}
+              className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200/60 dark:border-red-700/60 rounded-xl text-xs font-semibold text-red-700 dark:text-red-300 hover:from-red-100 hover:to-orange-100 dark:hover:from-red-900/30 dark:hover:to-orange-900/30 transition-all duration-200 shadow-sm touch-manipulation"
             >
               <Key className="w-3 h-3" />
               <span>{copiedItem === 'password' ? '已复制' : link.password}</span>
@@ -188,16 +197,34 @@ const LinkCard = ({ link, cloudType }) => {
           {/* 右侧操作按钮 */}
           {['magnet', 'torrent', 'thunder', 'ed2k'].includes(cloudType) ? (
             <button
-              onClick={() => copyToClipboard(link.url, 'url')}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                copyToClipboard(link.url, 'url')
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                copyToClipboard(link.url, 'url')
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl touch-manipulation"
             >
               <Copy className="w-3 h-3" />
               <span>{copiedItem === 'url' ? '已复制' : '复制链接'}</span>
             </button>
           ) : (
             <button
-              onClick={openLink}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                openLink()
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                openLink()
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl touch-manipulation"
             >
               <ExternalLink className="w-3 h-3" />
               <span>直达</span>
