@@ -180,13 +180,23 @@ const LinkCard = ({ link, cloudType }) => {
             <div></div>
           )}
 
-          {/* 右侧直达按钮 */}
-          <button
-            onClick={openLink}
-            className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded transition-colors"
-          >
-            直达
-          </button>
+          {/* 右侧操作按钮 */}
+          {['magnet', 'torrent', 'thunder', 'ed2k'].includes(cloudType) ? (
+            <button
+              onClick={() => copyToClipboard(link.url, 'url')}
+              className="flex items-center gap-1 px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded transition-colors"
+            >
+              <Copy className="w-3 h-3" />
+              <span>{copiedItem === 'url' ? '已复制' : '复制链接'}</span>
+            </button>
+          ) : (
+            <button
+              onClick={openLink}
+              className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded transition-colors"
+            >
+              直达
+            </button>
+          )}
         </div>
       </div>
     </div>

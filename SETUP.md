@@ -27,7 +27,7 @@ docker run -d -p 3000:80 -e API_DOMAIN=your-domain.com ghcr.io/your-username/you
 
 | 变量名 | 说明 | 默认值 |
 |--------|------|--------|
-| `API_DOMAIN` | PanSou API 域名 | `104.194.69.89` |
+| `API_DOMAIN` | PanSou API 域名 | `localhost` |
 
 ## 自定义配置
 

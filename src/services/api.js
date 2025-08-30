@@ -4,7 +4,7 @@ import axios from 'axios'
 const getApiBaseUrl = () => {
   const domain = import.meta.env.VITE_API_DOMAIN || 
                  (window.__APP_CONFIG__ && window.__APP_CONFIG__.API_DOMAIN) || 
-                 '104.194.69.89'
+                 'localhost'
   
   // 如果域名已经包含协议，直接使用，否则添加http://并指定端口8888
   if (domain.startsWith('http')) {

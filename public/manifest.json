@@ -4,8 +4,8 @@
   "description": "网盘资源搜索工具",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "background_color": "#f9fafb",
+  "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
   "categories": ["utilities", "productivity"],
   "icons": [
