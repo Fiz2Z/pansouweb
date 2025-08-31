@@ -20,6 +20,13 @@ COPY tailwind.config.js ./
 COPY postcss.config.js ./
 
 # 构建应用并移除不必要的文件
+ARG AUTHOR_NAME=Yuccc
+ARG BLOG_URL=
+ARG BLOG_NAME=Blog
+ENV AUTHOR_NAME=$AUTHOR_NAME
+ENV BLOG_URL=$BLOG_URL
+ENV BLOG_NAME=$BLOG_NAME
+
 RUN npm run build && \
     rm -rf node_modules src public *.js *.json
 
