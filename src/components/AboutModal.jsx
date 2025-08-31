@@ -22,6 +22,17 @@ const AboutModal = () => {
                   (window.__APP_CONFIG__ && window.__APP_CONFIG__.BLOG_NAME) || 
                   'Blog'
 
+  // 调试信息
+  console.log('环境变量调试信息:', {
+    VITE_AUTHOR_NAME: import.meta.env.VITE_AUTHOR_NAME,
+    VITE_BLOG_URL: import.meta.env.VITE_BLOG_URL,
+    VITE_BLOG_NAME: import.meta.env.VITE_BLOG_NAME,
+    window_config: window.__APP_CONFIG__,
+    final_authorName: authorName,
+    final_blogUrl: blogUrl,
+    final_blogName: blogName
+  })
+
   return (
     <>
       {/* 关于按钮 */}

@@ -18,7 +18,7 @@ if [ ! -f /usr/share/nginx/html/index.html.backup ]; then
   sed -i 's|</head>|<script src="/config.js"></script>\n  </head>|' /usr/share/nginx/html/index.html || true
 fi
 
-echo "API域名配置: ${API_DOMAIN:-localhost}"
+echo "配置已更新: AUTHOR_NAME=${AUTHOR_NAME:-Yuccc}, BLOG_URL=${BLOG_URL:-}, BLOG_NAME=${BLOG_NAME:-Blog}"
 
 # 启动 nginx
 exec "$@"
