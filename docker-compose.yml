@@ -7,7 +7,6 @@ services:
     ports:
       - "3000:80"
     environment:
-      - API_DOMAIN=localhost
       - AUTHOR_NAME=Yuccc
       - BLOG_URL=https://your-blog.com
       - BLOG_NAME=我的博客

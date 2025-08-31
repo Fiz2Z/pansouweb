@@ -1,20 +1,8 @@
 import axios from 'axios'
 
-// 从环境变量获取API域名（不包含端口）
-const getApiBaseUrl = () => {
-  const domain = import.meta.env.VITE_API_DOMAIN || 
-                 (window.__APP_CONFIG__ && window.__APP_CONFIG__.API_DOMAIN) || 
-                 'localhost'
-  
-  // 如果域名已经包含协议，直接使用，否则添加http://并指定端口8888
-  if (domain.startsWith('http')) {
-    return domain
-  }
-  
-  return `http://${domain}:8888`
-}
-
-const API_BASE_URL = getApiBaseUrl()
+// 使用相对路径，这样API请求会发送到同一个域名
+// 通过nginx配置将API请求代理到后端服务
+const API_BASE_URL = '/api'
 
 // 创建 axios 实例
 const api = axios.create({
