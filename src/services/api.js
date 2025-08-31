@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // 使用相对路径，这样API请求会发送到同一个域名
 // 通过nginx配置将API请求代理到后端服务
-const API_BASE_URL = '/api'
+const API_BASE_URL = ''
 
 // 创建 axios 实例
 const api = axios.create({
