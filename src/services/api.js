@@ -83,7 +83,7 @@ export const searchNetdisk = async (params) => {
     
     // 检查响应格式，如果有包装结构则解包
     let resultData = response.data
-    if (resultData && resultData.code === 200 && resultData.data) {
+    if (resultData && (resultData.code === 200 || resultData.code === 0) && resultData.data) {
       resultData = resultData.data
     }
     
