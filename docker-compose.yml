@@ -2,17 +2,8 @@ version: '3.8'
 
 services:
   sousouweb:
-    build:
-      context: .
-      args:
-        AUTHOR_NAME: ${AUTHOR_NAME:-Yuccc}
-        BLOG_URL: ${BLOG_URL:-https://your-blog.com}
-        BLOG_NAME: ${BLOG_NAME:-我的博客}
+    build: .
     container_name: sousouweb
     ports:
       - "3000:80"
-    environment:
-      - AUTHOR_NAME=${AUTHOR_NAME:-Yuccc}
-      - BLOG_URL=${BLOG_URL:-https://your-blog.com}
-      - BLOG_NAME=${BLOG_NAME:-我的博客}
     restart: unless-stopped

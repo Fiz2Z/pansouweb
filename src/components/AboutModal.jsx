@@ -9,29 +9,12 @@ const AboutModal = () => {
     setIsOpen(false)
   }
 
-  // 从环境变量获取配置
-  const authorName = import.meta.env.VITE_AUTHOR_NAME || 
-                   (window.__APP_CONFIG__ && window.__APP_CONFIG__.AUTHOR_NAME) || 
-                   'Yuccc'
-  
-  const blogUrl = import.meta.env.VITE_BLOG_URL || 
-                 (window.__APP_CONFIG__ && window.__APP_CONFIG__.BLOG_URL) || 
-                 null
+  // 直接写死博客信息
+  const authorName = 'Yuccc'
+  const blogUrl = 'https://blog.yuccc.cc'
+  const blogName = "Yuc's Blog"
 
-  const blogName = import.meta.env.VITE_BLOG_NAME || 
-                  (window.__APP_CONFIG__ && window.__APP_CONFIG__.BLOG_NAME) || 
-                  'Blog'
-
-  // 调试信息
-  console.log('环境变量调试信息:', {
-    VITE_AUTHOR_NAME: import.meta.env.VITE_AUTHOR_NAME,
-    VITE_BLOG_URL: import.meta.env.VITE_BLOG_URL,
-    VITE_BLOG_NAME: import.meta.env.VITE_BLOG_NAME,
-    window_config: window.__APP_CONFIG__,
-    final_authorName: authorName,
-    final_blogUrl: blogUrl,
-    final_blogName: blogName
-  })
+  // 删除调试信息
 
   return (
     <>

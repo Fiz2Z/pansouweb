@@ -17,11 +17,5 @@ export default defineConfig({
         }
       }
     }
-  },
-  define: {
-    // 在构建时注入环境变量，直接使用 Docker 环境变量名
-    'import.meta.env.VITE_AUTHOR_NAME': JSON.stringify(process.env.AUTHOR_NAME || 'Yuccc'),
-    'import.meta.env.VITE_BLOG_URL': JSON.stringify(process.env.BLOG_URL || ''),
-    'import.meta.env.VITE_BLOG_NAME': JSON.stringify(process.env.BLOG_NAME || 'Blog')
   }
 })

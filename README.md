@@ -100,26 +100,22 @@ http://localhost:3000
 
 ### 环境变量配置
 
-支持通过环境变量自定义配置：
+目前仅支持通过环境变量配置 API 域名：
 
 ```bash
 # 开发环境 - 创建 .env 文件
 VITE_API_DOMAIN=localhost
-VITE_AUTHOR_NAME=Yuccc
-VITE_BLOG_URL=https://your-blog.com
-VITE_BLOG_NAME=我的技术博客
 
 # Docker 部署 - 在 docker-compose.yml 中设置
 environment:
   - API_DOMAIN=your-domain.com
-  - AUTHOR_NAME=Your Name
-  - BLOG_URL=https://your-blog.com
-  - BLOG_NAME=Your Blog Name
 
 # 支持完整URL（包含协议和端口）
 environment:
   - API_DOMAIN=https://your-domain.com:8888
 ```
+
+**注意**: 博客信息（作者名称、博客地址、博客名称）已内置在代码中，无需通过环境变量配置。
 
 详细配置说明请参考 [环境变量配置文档](docs/ENVIRONMENT.md)。
 
@@ -141,7 +137,13 @@ src/
 │   ├── SearchForm.jsx  # 搜索表单
 │   ├── SearchResults.jsx # 搜索结果展示
 │   ├── LoadingSpinner.jsx # 加载动画
+│   ├── AboutModal.jsx  # 关于弹窗
+│   ├── SettingsModal.jsx # 设置弹窗
+│   ├── ThemeToggle.jsx # 主题切换
+│   ├── PWAInstallPrompt.jsx # PWA安装提示
 │   └── Footer.jsx      # 页面底部
+├── contexts/           # React Context
+│   └── ThemeContext.jsx # 主题上下文
 ├── services/           # API 服务
 │   └── api.js         # API 调用封装
 ├── App.jsx            # 主应用组件
@@ -186,9 +188,11 @@ docker run -d \
 | 变量名 | 说明 | 默认值 | 示例 |
 |--------|------|--------|------|
 | `API_DOMAIN` | API服务域名 | `localhost` | `api.example.com` |
-| `AUTHOR_NAME` | 作者名称 | `Yuccc` | `张三` |
-| `BLOG_URL` | 博客地址 | `null` | `https://blog.example.com` |
-| `BLOG_NAME` | 博客名称 | `Blog` | `我的技术博客` |
+
+**内置信息**:
+- 作者名称: `Yuccc`
+- 博客地址: `https://blog.yuccc.cc`
+- 博客名称: `Yuc's Blog`
 
 ## 致谢
 
