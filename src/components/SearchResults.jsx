@@ -21,21 +21,21 @@ const CLOUD_TYPE_CONFIG = {
 
 const CloudTypeTab = ({ type, count, isActive, onClick }) => {
   const config = CLOUD_TYPE_CONFIG[type] || { name: type, color: 'bg-gray-500' }
-  
+
   const handleClick = (e) => {
     e.preventDefault()
     e.stopPropagation()
     onClick()
   }
-  
+
   return (
     <button
       onClick={handleClick}
       onTouchStart={handleClick}
       className={`
         flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all text-sm touch-manipulation
-        ${isActive 
-          ? 'bg-primary-600 text-white shadow-md' 
+        ${isActive
+          ? 'bg-primary-600 text-white shadow-md'
           : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
         }
       `}
@@ -53,19 +53,19 @@ const CloudTypeTab = ({ type, count, isActive, onClick }) => {
 
 const LinkCard = ({ link, cloudType }) => {
   const [copiedItem, setCopiedItem] = useState(null)
-  
+
   const config = CLOUD_TYPE_CONFIG[cloudType] || { name: cloudType, color: 'bg-gray-500', icon: '📁' }
 
   const copyToClipboard = async (text, type) => {
     try {
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-      
+
       if (isIOS) {
         // iOS 最佳实践方法
         return new Promise((resolve, reject) => {
           const textArea = document.createElement('textarea')
           textArea.value = text
-          
+
           // 关键：让元素可见但不影响布局
           textArea.style.position = 'absolute'
           textArea.style.left = '0'
@@ -80,18 +80,18 @@ const LinkCard = ({ link, cloudType }) => {
           textArea.style.fontSize = '16px' // 防止iOS缩放
           textArea.style.zIndex = '-1'
           textArea.setAttribute('readonly', '')
-          
+
           document.body.appendChild(textArea)
-          
+
           // 重要：使用 requestAnimationFrame 确保DOM更新
           requestAnimationFrame(() => {
             try {
               textArea.select()
               textArea.setSelectionRange(0, text.length)
-              
+
               const successful = document.execCommand('copy')
               document.body.removeChild(textArea)
-              
+
               if (successful) {
                 setCopiedItem(type)
                 setTimeout(() => setCopiedItem(null), 2000)
@@ -118,22 +118,22 @@ const LinkCard = ({ link, cloudType }) => {
           document.body.appendChild(textArea)
           textArea.focus()
           textArea.select()
-          
+
           const successful = document.execCommand('copy')
           textArea.remove()
-          
+
           if (!successful) {
             throw new Error('复制失败')
           }
         }
-        
+
         setCopiedItem(type)
         setTimeout(() => setCopiedItem(null), 2000)
       }
-      
+
     } catch (err) {
       console.error('复制失败:', err)
-      
+
       // 更友好的错误处理
       if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
         // iOS: 直接显示内容让用户手动复制
@@ -170,39 +170,37 @@ const LinkCard = ({ link, cloudType }) => {
   const openLink = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    
+
     // 所有设备都使用新标签页打开
     window.open(link.url, '_blank', 'noopener,noreferrer')
   }
 
   return (
-    <div className="group bg-white dark:bg-gray-900 rounded-2xl shadow-sm border-0 ring-1 ring-gray-200/50 dark:ring-gray-700/50 hover:shadow-xl hover:ring-gray-300/50 dark:hover:ring-gray-600/50 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[160px] hover:-translate-y-1">
+    <div className="group bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-2xl hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[180px] hover:-translate-y-1 cursor-pointer">
       {/* 头部标签区域 */}
-      <div className="relative p-4 pb-2">
+      <div className="relative p-5 pb-3">
         <div className="flex items-start justify-between mb-3">
-          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold text-white ${config.color} shadow-lg`}>
+          <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold font-heading text-white ${config.color} shadow-md`}>
             {config.name}
           </span>
           {link.datetime && (
-            <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">
+            <span className="text-xs text-gray-500 dark:text-gray-400 font-body">
               {formatDate(link.datetime)}
             </span>
           )}
         </div>
-        
+
         {/* 资源标题 */}
-        <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 leading-snug hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer mb-3">
+        <h3 className="text-base font-bold font-heading text-gray-900 dark:text-white line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-3">
           {link.note || '未命名资源'}
         </h3>
       </div>
-
-
 
       {/* 占位区域 */}
       <div className="flex-grow"></div>
 
       {/* 底部操作区域 */}
-      <div className="p-4 pt-2">
+      <div className="p-5 pt-2 bg-gray-50/50 dark:bg-gray-900/50">
         <div className="flex items-center justify-between gap-3">
           {/* 左侧提取码 */}
           {link.password ? (
@@ -217,9 +215,9 @@ const LinkCard = ({ link, cloudType }) => {
                 e.stopPropagation()
                 copyToClipboard(link.password, 'password')
               }}
-              className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200/60 dark:border-red-700/60 rounded-xl text-xs font-semibold text-red-700 dark:text-red-300 hover:from-red-100 hover:to-orange-100 dark:hover:from-red-900/30 dark:hover:to-orange-900/30 transition-all duration-200 shadow-sm touch-manipulation"
+              className="flex items-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg text-xs font-semibold font-body text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-all duration-200 shadow-sm hover:shadow-md touch-manipulation"
             >
-              <Key className="w-3 h-3" />
+              <Key className="w-3.5 h-3.5" />
               <span>{copiedItem === 'password' ? '已复制' : link.password}</span>
             </button>
           ) : (
@@ -239,18 +237,18 @@ const LinkCard = ({ link, cloudType }) => {
                 e.stopPropagation()
                 copyToClipboard(link.url, 'url')
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl touch-manipulation"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 touch-manipulation"
             >
-              <Copy className="w-3 h-3" />
+              <Copy className="w-4 h-4" />
               <span>{copiedItem === 'url' ? '已复制' : '复制链接'}</span>
             </button>
           ) : (
             <button
               onClick={openLink}
               onTouchStart={openLink}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl touch-manipulation"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-primary hover:shadow-lg text-white text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:scale-105 touch-manipulation"
             >
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-4 h-4" />
               <span>直达</span>
             </button>
           )}
@@ -263,30 +261,30 @@ const LinkCard = ({ link, cloudType }) => {
 const IntegratedCloudCard = ({ type, links, config }) => {
   const [isExpanded, setIsExpanded] = useState(true)
   const [showAll, setShowAll] = useState(false)
-  
+
   const displayLinks = showAll ? links : links.slice(0, 3)
   const hasMore = links.length > 3
 
   return (
-    <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/40 dark:border-gray-600/40 overflow-hidden animate-fade-in">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in shadow-md hover:shadow-xl transition-all duration-300">
       {/* 卡片头部 */}
-      <div 
-        className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors"
+      <div
+        className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-3">
-          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold text-white ${config.color} shadow-sm`}>
+          <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold font-heading text-white ${config.color} shadow-md`}>
             {config.name}
           </span>
-          <span className="text-lg font-bold text-gray-900 dark:text-white">
+          <span className="text-lg font-bold font-heading text-gray-900 dark:text-white">
             {links.length} 条资源
           </span>
         </div>
-        
-        <svg 
-          className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} 
-          fill="none" 
-          stroke="currentColor" 
+
+        <svg
+          className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -295,13 +293,13 @@ const IntegratedCloudCard = ({ type, links, config }) => {
 
       {/* 卡片内容 */}
       {isExpanded && (
-        <div className="border-t border-white/30 dark:border-gray-600/30">
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div>
+          <div className="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {displayLinks.map((link, index) => (
-              <div 
+              <div
                 key={index}
-                className="animate-fade-in"
-                style={{ 
+                className="animate-scale-in"
+                style={{
                   animationDelay: `${index * 50}ms`,
                   animationFillMode: 'both'
                 }}
@@ -310,24 +308,24 @@ const IntegratedCloudCard = ({ type, links, config }) => {
               </div>
             ))}
           </div>
-          
+
           {/* 查看全部按钮 */}
           {hasMore && (
-            <div className="border-t border-white/20 dark:border-gray-600/20 p-3">
+            <div className="border-t border-gray-100 dark:border-gray-700 p-4">
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-700 dark:text-blue-300 rounded-xl hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 transition-all duration-200 font-medium"
+                className="w-full flex items-center justify-center gap-2 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-200 font-semibold font-heading border border-blue-200 dark:border-blue-800"
               >
                 {showAll ? (
                   <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
                     </svg>
                     <span>收起 ({links.length - 3} 条)</span>
                   </>
                 ) : (
                   <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>
                     <span>查看全部 {links.length} 条资源</span>
@@ -344,12 +342,12 @@ const IntegratedCloudCard = ({ type, links, config }) => {
 
 const SearchResults = ({ results }) => {
   // 获取可用的网盘类型和数量，并按资源数量降序排列
-  const cloudTypes = results?.merged_by_type 
+  const cloudTypes = results?.merged_by_type
     ? Object.keys(results.merged_by_type).sort((a, b) => {
-        const countA = results.merged_by_type[a]?.length || 0
-        const countB = results.merged_by_type[b]?.length || 0
-        return countB - countA // 降序排列
-      })
+      const countA = results.merged_by_type[a]?.length || 0
+      const countB = results.merged_by_type[b]?.length || 0
+      return countB - countA // 降序排列
+    })
     : []
 
   if (!results || !results.merged_by_type || Object.keys(results.merged_by_type).length === 0) {
@@ -388,7 +386,7 @@ const SearchResults = ({ results }) => {
           {cloudTypes.map(type => {
             const links = results.merged_by_type[type] || []
             const config = CLOUD_TYPE_CONFIG[type] || { name: type, color: 'bg-gray-500' }
-            
+
             return (
               <IntegratedCloudCard
                 key={type}
