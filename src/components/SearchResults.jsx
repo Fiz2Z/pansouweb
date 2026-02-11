@@ -200,7 +200,7 @@ const SearchResults = ({ results }) => {
   }
 
   return (
-    <div className={isCompact ? 'space-y-3 sm:space-y-4' : 'space-y-4 sm:space-y-5'}>
+    <div className="space-y-4 sm:space-y-5">
       <div className="glass-card rounded-2xl px-4 sm:px-5 py-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
           <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">搜索结果</h2>
