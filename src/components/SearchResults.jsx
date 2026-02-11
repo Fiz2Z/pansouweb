@@ -144,7 +144,7 @@ const LinkCard = ({ link, cloudType }) => {
   }
 
   return (
-    <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-md border border-gray-200/80 dark:border-gray-700 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[172px] sm:min-h-[180px] hover:-translate-y-0.5 sm:hover:-translate-y-1 cursor-pointer">
+    <div className="group bg-white/85 dark:bg-slate-800/85 rounded-2xl shadow-md border border-white/70 dark:border-slate-700 hover:shadow-xl hover:border-sky-300 dark:hover:border-sky-600 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[172px] sm:min-h-[180px] hover:-translate-y-0.5 sm:hover:-translate-y-1 cursor-pointer backdrop-blur-xl">
       {/* 头部标签区域 */}
       <div className="relative p-4 sm:p-5 pb-2 sm:pb-3">
         <div className="flex items-start justify-between mb-3">
@@ -159,7 +159,7 @@ const LinkCard = ({ link, cloudType }) => {
         </div>
 
         {/* 资源标题 */}
-        <h3 className="text-sm sm:text-base font-bold font-heading text-gray-900 dark:text-white line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2 sm:mb-3">
+        <h3 className="text-sm sm:text-base font-bold font-heading text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors mb-2 sm:mb-3">
           {link.note || '未命名资源'}
         </h3>
       </div>
@@ -168,7 +168,7 @@ const LinkCard = ({ link, cloudType }) => {
       <div className="flex-grow"></div>
 
       {/* 底部操作区域 */}
-      <div className="p-4 sm:p-5 pt-2 bg-gray-50/60 dark:bg-gray-900/50">
+      <div className="p-4 sm:p-5 pt-2 bg-slate-50/70 dark:bg-slate-900/55">
         <div className="flex items-center justify-between gap-2 sm:gap-3">
           {/* 左侧提取码 */}
           {link.password ? (
@@ -214,7 +214,7 @@ const LinkCard = ({ link, cloudType }) => {
             <button
               onClick={openLink}
               onTouchStart={openLink}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-primary hover:shadow-lg text-white text-xs sm:text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:scale-[1.02] touch-manipulation"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 hover:shadow-lg text-white text-xs sm:text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:scale-[1.02] touch-manipulation"
             >
               <ExternalLink className="w-4 h-4" />
               <span>直达</span>
@@ -234,17 +234,17 @@ const IntegratedCloudCard = ({ type, links, config }) => {
   const hasMore = links.length > 3
 
   return (
-    <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in shadow-md hover:shadow-xl transition-all duration-300">
+    <div className="bg-white/85 dark:bg-slate-800/85 rounded-2xl border border-white/70 dark:border-slate-700 overflow-hidden animate-fade-in shadow-md hover:shadow-xl transition-all duration-300 backdrop-blur-xl">
       {/* 卡片头部 */}
       <div
-        className="flex items-center justify-between p-4 sm:p-5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700"
+        className="flex items-center justify-between p-4 sm:p-5 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors border-b border-slate-100 dark:border-slate-700"
         onClick={() => setIsExpanded(!isExpanded)}
       >
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold font-heading text-white ${config.color} shadow-md`}>
               {config.name}
             </span>
-            <span className="text-sm sm:text-lg font-bold font-heading text-gray-900 dark:text-white truncate">
+            <span className="text-sm sm:text-lg font-bold font-heading text-slate-900 dark:text-white truncate">
               {links.length} 条资源
             </span>
           </div>
@@ -282,8 +282,8 @@ const IntegratedCloudCard = ({ type, links, config }) => {
               <div className="border-t border-gray-100 dark:border-gray-700 p-4">
                 <button
                   onClick={() => setShowAll(!showAll)}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-200 font-semibold font-heading border border-blue-200 dark:border-blue-800"
-              >
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300 rounded-xl hover:bg-sky-100 dark:hover:bg-sky-900/30 transition-all duration-200 font-semibold font-heading border border-sky-200 dark:border-sky-800"
+                >
                 {showAll ? (
                   <>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -329,10 +329,10 @@ const SearchResults = ({ results }) => {
   return (
     <div className="space-y-6">
       {/* 搜索统计 */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3 rounded-2xl border border-white/70 dark:border-slate-700 bg-white/75 dark:bg-slate-800/75 backdrop-blur-xl px-4 sm:px-5 py-3">
         <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">搜索结果</h2>
-          <span className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">搜索结果</h2>
+          <span className="text-sm sm:text-base text-slate-500 dark:text-slate-400">
             共找到 {results.total || 0} 条结果
           </span>
         </div>

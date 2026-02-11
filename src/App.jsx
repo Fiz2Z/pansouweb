@@ -131,7 +131,10 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-indigo-50 to-sky-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
+      <div className="relative min-h-screen flex flex-col overflow-hidden bg-[radial-gradient(circle_at_top,_#e0f2fe_0%,_#eef2ff_40%,_#f8fafc_100%)] dark:bg-[radial-gradient(circle_at_top,_#0f172a_0%,_#111827_45%,_#020617_100%)]">
+        <div className="pointer-events-none absolute -top-24 -left-20 h-64 w-64 rounded-full bg-cyan-300/35 blur-3xl dark:bg-cyan-700/20" />
+        <div className="pointer-events-none absolute top-12 right-0 h-72 w-72 rounded-full bg-indigo-300/25 blur-3xl dark:bg-indigo-700/20" />
+        <div className="pointer-events-none absolute bottom-12 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-sky-200/30 blur-3xl dark:bg-sky-700/20" />
         <Header
           selectedCloudTypes={selectedCloudTypes}
           onCloudTypesChange={handleCloudTypesChange}
@@ -141,14 +144,14 @@ function App() {
 
         {/* 首页状态 */}
         {isHomepage && (
-          <main className="flex-1 flex items-center justify-center px-4 py-8 sm:py-10 md:py-12">
+          <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8 sm:py-10 md:py-12">
             <div className="text-center w-full max-w-5xl">
               {/* 主标题区域 */}
               <div className="mb-7 sm:mb-10 animate-fade-in">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading text-gradient-primary mb-4 leading-tight">
                   全网资源搜索
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed font-body px-2">
+                <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-body px-2">
                   高效搜索全网资源,一站式覆盖主流网盘平台
                 </p>
               </div>
@@ -167,44 +170,44 @@ function App() {
 
               {/* 项目特点 */}
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 max-w-5xl mx-auto animate-fade-in animation-delay-400">
-                <div className="group text-center p-5 sm:p-6 rounded-2xl bg-white/85 dark:bg-gray-800/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/50 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                <div className="group text-center p-5 sm:p-6 rounded-2xl bg-white/75 dark:bg-slate-800/75 backdrop-blur-xl border border-white/70 dark:border-slate-700/70 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
-                  <h3 className="text-sm sm:text-base font-semibold font-heading text-gray-900 dark:text-white mb-1">极速搜索</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-body">毫秒级响应</p>
+                  <h3 className="text-sm sm:text-base font-semibold font-heading text-slate-900 dark:text-white mb-1">极速搜索</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-body">毫秒级响应</p>
                 </div>
 
-                <div className="group text-center p-5 sm:p-6 rounded-2xl bg-white/85 dark:bg-gray-800/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/50 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                <div className="group text-center p-5 sm:p-6 rounded-2xl bg-white/75 dark:bg-slate-800/75 backdrop-blur-xl border border-white/70 dark:border-slate-700/70 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer">
                   <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                   </div>
-                  <h3 className="text-sm sm:text-base font-semibold font-heading text-gray-900 dark:text-white mb-1">11+ 平台</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-body">全面覆盖</p>
+                  <h3 className="text-sm sm:text-base font-semibold font-heading text-slate-900 dark:text-white mb-1">11+ 平台</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-body">全面覆盖</p>
                 </div>
 
-                <div className="group text-center p-5 sm:p-6 rounded-2xl bg-white/85 dark:bg-gray-800/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/50 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                <div className="group text-center p-5 sm:p-6 rounded-2xl bg-white/75 dark:bg-slate-800/75 backdrop-blur-xl border border-white/70 dark:border-slate-700/70 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer">
                   <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <h3 className="text-sm sm:text-base font-semibold font-heading text-gray-900 dark:text-white mb-1">安全可靠</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-body">无需注册</p>
+                  <h3 className="text-sm sm:text-base font-semibold font-heading text-slate-900 dark:text-white mb-1">安全可靠</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-body">无需注册</p>
                 </div>
 
-                <div className="group text-center p-5 sm:p-6 rounded-2xl bg-white/85 dark:bg-gray-800/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/50 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                <div className="group text-center p-5 sm:p-6 rounded-2xl bg-white/75 dark:bg-slate-800/75 backdrop-blur-xl border border-white/70 dark:border-slate-700/70 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer">
                   <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="text-sm sm:text-base font-semibold font-heading text-gray-900 dark:text-white mb-1">PWA 支持</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-body">离线可用</p>
+                  <h3 className="text-sm sm:text-base font-semibold font-heading text-slate-900 dark:text-white mb-1">PWA 支持</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-body">离线可用</p>
                 </div>
               </div>
             </div>
@@ -213,7 +216,7 @@ function App() {
 
         {/* 搜索状态页面 */}
         {!isHomepage && (
-          <main className="flex-1 container mx-auto px-4 sm:px-5 lg:px-6 max-w-6xl">
+          <main className="relative z-10 flex-1 container mx-auto px-4 sm:px-5 lg:px-6 max-w-6xl">
             <div className="py-6 sm:py-8 space-y-6 sm:space-y-8">
               {/* 搜索表单 */}
               <div className="animate-fade-in">
