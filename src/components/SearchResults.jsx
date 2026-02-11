@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ExternalLink, Copy, Eye, Calendar, Image as ImageIcon, Key, Download } from 'lucide-react'
+import { ExternalLink, Copy, Eye, Key } from 'lucide-react'
 
 const CLOUD_TYPE_CONFIG = {
   baidu: { name: '百度网盘', color: 'bg-blue-500' },
@@ -17,38 +17,6 @@ const CLOUD_TYPE_CONFIG = {
   mobile: { name: '移动云盘', color: 'bg-teal-500' },
   lanzou: { name: '蓝奏云盘', color: 'bg-blue-600' },
   torrent: { name: 'Torrent', color: 'bg-gray-700' }
-}
-
-const CloudTypeTab = ({ type, count, isActive, onClick }) => {
-  const config = CLOUD_TYPE_CONFIG[type] || { name: type, color: 'bg-gray-500' }
-
-  const handleClick = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    onClick()
-  }
-
-  return (
-    <button
-      onClick={handleClick}
-      onTouchStart={handleClick}
-      className={`
-        flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all text-sm touch-manipulation
-        ${isActive
-          ? 'bg-primary-600 text-white shadow-md'
-          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-        }
-      `}
-    >
-      <span className="truncate">{config.name}</span>
-      <span className={`
-        px-2 py-0.5 rounded-full text-xs font-bold flex-shrink-0
-        ${isActive ? 'bg-white/20 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}
-      `}>
-        {count}
-      </span>
-    </button>
-  )
 }
 
 const LinkCard = ({ link, cloudType }) => {
@@ -176,22 +144,22 @@ const LinkCard = ({ link, cloudType }) => {
   }
 
   return (
-    <div className="group bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-2xl hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[180px] hover:-translate-y-1 cursor-pointer">
+    <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-md border border-gray-200/80 dark:border-gray-700 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[172px] sm:min-h-[180px] hover:-translate-y-0.5 sm:hover:-translate-y-1 cursor-pointer">
       {/* 头部标签区域 */}
-      <div className="relative p-5 pb-3">
+      <div className="relative p-4 sm:p-5 pb-2 sm:pb-3">
         <div className="flex items-start justify-between mb-3">
           <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold font-heading text-white ${config.color} shadow-md`}>
             {config.name}
           </span>
           {link.datetime && (
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-body">
+            <span className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-body pl-2 text-right">
               {formatDate(link.datetime)}
             </span>
           )}
         </div>
 
         {/* 资源标题 */}
-        <h3 className="text-base font-bold font-heading text-gray-900 dark:text-white line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-3">
+        <h3 className="text-sm sm:text-base font-bold font-heading text-gray-900 dark:text-white line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2 sm:mb-3">
           {link.note || '未命名资源'}
         </h3>
       </div>
@@ -200,8 +168,8 @@ const LinkCard = ({ link, cloudType }) => {
       <div className="flex-grow"></div>
 
       {/* 底部操作区域 */}
-      <div className="p-5 pt-2 bg-gray-50/50 dark:bg-gray-900/50">
-        <div className="flex items-center justify-between gap-3">
+      <div className="p-4 sm:p-5 pt-2 bg-gray-50/60 dark:bg-gray-900/50">
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
           {/* 左侧提取码 */}
           {link.password ? (
             <button
@@ -215,7 +183,7 @@ const LinkCard = ({ link, cloudType }) => {
                 e.stopPropagation()
                 copyToClipboard(link.password, 'password')
               }}
-              className="flex items-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg text-xs font-semibold font-body text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-all duration-200 shadow-sm hover:shadow-md touch-manipulation"
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg text-xs font-semibold font-body text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-all duration-200 shadow-sm hover:shadow-md touch-manipulation"
             >
               <Key className="w-3.5 h-3.5" />
               <span>{copiedItem === 'password' ? '已复制' : link.password}</span>
@@ -237,7 +205,7 @@ const LinkCard = ({ link, cloudType }) => {
                 e.stopPropagation()
                 copyToClipboard(link.url, 'url')
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 touch-manipulation"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-xs sm:text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-[1.02] touch-manipulation"
             >
               <Copy className="w-4 h-4" />
               <span>{copiedItem === 'url' ? '已复制' : '复制链接'}</span>
@@ -246,7 +214,7 @@ const LinkCard = ({ link, cloudType }) => {
             <button
               onClick={openLink}
               onTouchStart={openLink}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-primary hover:shadow-lg text-white text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:scale-105 touch-manipulation"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-primary hover:shadow-lg text-white text-xs sm:text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:scale-[1.02] touch-manipulation"
             >
               <ExternalLink className="w-4 h-4" />
               <span>直达</span>
@@ -266,20 +234,20 @@ const IntegratedCloudCard = ({ type, links, config }) => {
   const hasMore = links.length > 3
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in shadow-md hover:shadow-xl transition-all duration-300">
+    <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in shadow-md hover:shadow-xl transition-all duration-300">
       {/* 卡片头部 */}
       <div
-        className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700"
+        className="flex items-center justify-between p-4 sm:p-5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-3">
-          <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold font-heading text-white ${config.color} shadow-md`}>
-            {config.name}
-          </span>
-          <span className="text-lg font-bold font-heading text-gray-900 dark:text-white">
-            {links.length} 条资源
-          </span>
-        </div>
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold font-heading text-white ${config.color} shadow-md`}>
+              {config.name}
+            </span>
+            <span className="text-sm sm:text-lg font-bold font-heading text-gray-900 dark:text-white truncate">
+              {links.length} 条资源
+            </span>
+          </div>
 
         <svg
           className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
@@ -294,16 +262,16 @@ const IntegratedCloudCard = ({ type, links, config }) => {
       {/* 卡片内容 */}
       {isExpanded && (
         <div>
-          <div className="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
             {displayLinks.map((link, index) => (
               <div
                 key={index}
                 className="animate-scale-in"
                 style={{
-                  animationDelay: `${index * 50}ms`,
-                  animationFillMode: 'both'
-                }}
-              >
+                    animationDelay: `${index * 40}ms`,
+                    animationFillMode: 'both'
+                  }}
+                >
                 <LinkCard link={link} cloudType={type} />
               </div>
             ))}
@@ -311,10 +279,10 @@ const IntegratedCloudCard = ({ type, links, config }) => {
 
           {/* 查看全部按钮 */}
           {hasMore && (
-            <div className="border-t border-gray-100 dark:border-gray-700 p-4">
-              <button
-                onClick={() => setShowAll(!showAll)}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-200 font-semibold font-heading border border-blue-200 dark:border-blue-800"
+              <div className="border-t border-gray-100 dark:border-gray-700 p-4">
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-200 font-semibold font-heading border border-blue-200 dark:border-blue-800"
               >
                 {showAll ? (
                   <>
@@ -361,10 +329,10 @@ const SearchResults = ({ results }) => {
   return (
     <div className="space-y-6">
       {/* 搜索统计 */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">搜索结果</h2>
-          <span className="text-gray-500 dark:text-gray-400">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">搜索结果</h2>
+          <span className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
             共找到 {results.total || 0} 条结果
           </span>
         </div>

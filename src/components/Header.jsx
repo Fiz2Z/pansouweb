@@ -47,25 +47,25 @@ const Header = ({ selectedCloudTypes, onCloudTypesChange, isSettingsOpen, setIsS
   }
 
   return (
-    <header className="border-b border-gray-200/30 dark:border-gray-700/50">
-      <div className="container mx-auto px-4 py-4 max-w-6xl">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+    <header className="border-b border-gray-200/40 dark:border-gray-700/50 bg-white/40 dark:bg-gray-900/30 backdrop-blur-md">
+      <div className="container mx-auto px-4 sm:px-5 lg:px-6 py-3 sm:py-4 max-w-6xl">
+        <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center min-w-0 gap-2 sm:gap-3">
             <div className="text-primary-600 dark:text-primary-400">
               <Logo />
             </div>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">全网资源搜索</h1>
+            <h1 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">全网资源搜索</h1>
             
             {/* API状态指示器 */}
-            <div className="flex items-center space-x-2 ml-4">
+            <div className="flex items-center space-x-2 ml-1 sm:ml-3">
               <div className={`w-2 h-2 rounded-full ${getStatusColor()} ${apiStatus === 'checking' ? 'animate-pulse' : ''}`}></div>
-              <span className="text-xs text-gray-500 dark:text-gray-400 hidden sm:inline">
+              <span className="text-xs text-gray-500 dark:text-gray-400 hidden md:inline">
                 {getStatusText()}
               </span>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-end">
             <SettingsModal 
               selectedCloudTypes={selectedCloudTypes}
               onCloudTypesChange={onCloudTypesChange}

@@ -81,7 +81,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
       {/* 设置按钮 */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center space-x-2 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-xl backdrop-blur-sm transition-all duration-200"
+        className="flex items-center space-x-2 px-3 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-800/60 rounded-xl backdrop-blur-sm transition-all duration-200 min-h-[42px]"
         title="资源搜索设置"
       >
         <Settings className="w-4 h-4" />
@@ -91,7 +91,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
       {/* 弹窗模态框 */}
       {isOpen && createPortal(
         <div 
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4"
           style={{ 
             position: 'fixed',
             top: 0,
@@ -109,9 +109,9 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
           
           {/* 弹窗内容 */}
           <div 
-            className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 dark:border-gray-700 animate-slide-up flex flex-col"
+            className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-200 dark:border-gray-700 animate-slide-up flex flex-col"
             style={{ 
-              maxHeight: 'calc(100vh - 2rem)',
+              maxHeight: 'calc(100vh - 1.5rem)',
               height: 'auto',
               position: 'relative',
               zIndex: 1
@@ -134,7 +134,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
             </div>
 
             {/* 内容区域 */}
-            <div className="p-4 sm:p-6 overflow-y-auto flex-grow" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+            <div className="p-4 sm:p-6 overflow-y-auto flex-grow" style={{ maxHeight: 'calc(100vh - 184px)' }}>
               
 
               {/* 网盘平台操作按钮 */}
@@ -157,7 +157,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
               </div>
 
               {/* 网盘类型网格 */}
-              <div className="grid grid-cols-4 gap-3 mb-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 mb-6">
                 {CLOUD_TYPES.map((cloudType) => (
                   <label
                     key={cloudType.value}
@@ -180,10 +180,10 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
                     </div>
 
                     {/* 网盘名称 */}
-                    <span className={`text-xs font-medium text-center transition-colors ${
-                      tempSelected.includes(cloudType.value)
-                        ? 'text-blue-700 dark:text-blue-300'
-                        : 'text-gray-600 dark:text-gray-300'
+                      <span className={`text-xs font-medium text-center transition-colors break-all ${
+                        tempSelected.includes(cloudType.value)
+                          ? 'text-blue-700 dark:text-blue-300'
+                          : 'text-gray-600 dark:text-gray-300'
                     }`}>
                       {cloudType.label}
                     </span>
@@ -210,7 +210,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
                     </button>
                   </div>
                 </div>
-                <div className="grid grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                   {OTHER_TYPES.map((otherType) => (
                     <label
                       key={otherType.value}
@@ -233,7 +233,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
                       </div>
 
                       {/* 类型名称 */}
-                      <span className={`text-xs font-medium text-center transition-colors ${
+                      <span className={`text-xs font-medium text-center transition-colors break-all ${
                         tempSelected.includes(otherType.value)
                           ? 'text-purple-700 dark:text-purple-300'
                           : 'text-gray-600 dark:text-gray-300'
@@ -264,7 +264,7 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
             </div>
 
             {/* 底部按钮 */}
-            <div className="flex gap-3 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <div className="flex gap-2 sm:gap-3 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 sticky bottom-0 bg-white dark:bg-gray-800">
               <button
                 onClick={handleCancel}
                 className="flex-1 px-4 py-3 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
