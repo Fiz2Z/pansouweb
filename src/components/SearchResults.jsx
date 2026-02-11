@@ -55,8 +55,7 @@ const copyText = async (text) => {
   }
 }
 
-const LinkCard = ({ link, cloudType, densityMode = 'comfortable' }) => {
-  const isCompact = densityMode === 'compact'
+const LinkCard = ({ link, cloudType }) => {
   const [copiedType, setCopiedType] = useState('')
   const cloud = CLOUD_TYPE_CONFIG[cloudType] || { name: cloudType, color: 'from-slate-500 to-slate-700' }
   const isCopyOnlyType = ['magnet', 'torrent', 'thunder', 'ed2k'].includes(cloudType)
@@ -69,7 +68,7 @@ const LinkCard = ({ link, cloudType, densityMode = 'comfortable' }) => {
   }
 
   return (
-    <article className={`glass-card rounded-2xl flex flex-col h-full animate-scale-in ${isCompact ? 'p-3 sm:p-3.5' : 'p-4 sm:p-5'}`}>
+    <article className="glass-card rounded-2xl p-4 sm:p-5 flex flex-col h-full animate-scale-in">
       <div className="flex items-start justify-between gap-2">
         <span className={`inline-flex items-center rounded-lg px-3 py-1 text-xs font-semibold text-white bg-gradient-to-r ${cloud.color}`}>
           {cloud.name}
@@ -80,11 +79,11 @@ const LinkCard = ({ link, cloudType, densityMode = 'comfortable' }) => {
         </span>
       </div>
 
-      <h3 className={`text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 line-clamp-2 ${isCompact ? 'mt-2.5' : 'mt-3'}`}>
+      <h3 className="mt-3 text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 line-clamp-2">
         {link.note || '未命名资源'}
       </h3>
 
-      <div className={`mt-auto flex items-center justify-between gap-2 ${isCompact ? 'pt-3' : 'pt-4'}`}>
+      <div className="mt-auto pt-4 flex items-center justify-between gap-2">
         {link.password ? (
           <button
             type="button"
@@ -126,9 +125,8 @@ const LinkCard = ({ link, cloudType, densityMode = 'comfortable' }) => {
   )
 }
 
-const CloudSection = ({ type, links, densityMode = 'comfortable' }) => {
-  const isCompact = densityMode === 'compact'
-  const [expanded, setExpanded] = useState(true)
+const CloudSection = ({ type, links }) => {
+  const [expanded, setExpanded] = useState(false)
   const [showAll, setShowAll] = useState(false)
   const config = CLOUD_TYPE_CONFIG[type] || { name: type, color: 'from-slate-500 to-slate-700' }
   const visibleLinks = showAll ? links : links.slice(0, 6)
@@ -139,7 +137,7 @@ const CloudSection = ({ type, links, densityMode = 'comfortable' }) => {
       <button
         type="button"
         onClick={() => setExpanded((prev) => !prev)}
-        className={`w-full text-left bg-transparent hover:bg-slate-100/50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer ${isCompact ? 'px-3.5 sm:px-4 py-3' : 'px-4 sm:px-5 py-4'}`}
+        className="w-full px-4 sm:px-5 py-4 text-left bg-transparent hover:bg-slate-100/50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
       >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -161,10 +159,10 @@ const CloudSection = ({ type, links, densityMode = 'comfortable' }) => {
       </button>
 
       {expanded && (
-        <div className={isCompact ? 'px-3.5 sm:px-4 pb-3.5 sm:pb-4' : 'px-4 sm:px-5 pb-4 sm:pb-5'}>
-          <div className={`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-3 sm:gap-4'}`}>
+        <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
             {visibleLinks.map((link, index) => (
-              <LinkCard key={`${type}-${index}`} link={link} cloudType={type} densityMode={densityMode} />
+              <LinkCard key={`${type}-${index}`} link={link} cloudType={type} />
             ))}
           </div>
 
@@ -183,8 +181,7 @@ const CloudSection = ({ type, links, densityMode = 'comfortable' }) => {
   )
 }
 
-const SearchResults = ({ results, densityMode = 'comfortable' }) => {
-  const isCompact = densityMode === 'compact'
+const SearchResults = ({ results }) => {
   const cloudTypes = useMemo(() => {
     if (!results?.merged_by_type) return []
     return Object.keys(results.merged_by_type).sort(
@@ -204,7 +201,7 @@ const SearchResults = ({ results, densityMode = 'comfortable' }) => {
 
   return (
     <div className={isCompact ? 'space-y-3 sm:space-y-4' : 'space-y-4 sm:space-y-5'}>
-      <div className={`glass-card rounded-2xl ${isCompact ? 'px-3.5 sm:px-4 py-3' : 'px-4 sm:px-5 py-3.5'}`}>
+      <div className="glass-card rounded-2xl px-4 sm:px-5 py-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
           <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">搜索结果</h2>
           <p className="text-sm text-slate-600 dark:text-slate-300">共找到 {results.total || 0} 条资源</p>
@@ -212,7 +209,7 @@ const SearchResults = ({ results, densityMode = 'comfortable' }) => {
       </div>
 
       {cloudTypes.map((type) => (
-        <CloudSection key={type} type={type} links={results.merged_by_type[type] || []} densityMode={densityMode} />
+        <CloudSection key={type} type={type} links={results.merged_by_type[type] || []} />
       ))}
     </div>
   )
@@ -230,21 +227,19 @@ const SkeletonCard = ({ compact }) => (
   </div>
 )
 
-export const SearchResultsSkeleton = ({ densityMode = 'comfortable' }) => {
-  const isCompact = densityMode === 'compact'
-
+export const SearchResultsSkeleton = () => {
   return (
-    <div className={isCompact ? 'space-y-3 sm:space-y-4' : 'space-y-4 sm:space-y-5'} aria-hidden="true">
-      <div className={`glass-card rounded-2xl animate-pulse ${isCompact ? 'px-3.5 sm:px-4 py-3' : 'px-4 sm:px-5 py-3.5'}`}>
+    <div className="space-y-4 sm:space-y-5" aria-hidden="true">
+      <div className="glass-card rounded-2xl animate-pulse px-4 sm:px-5 py-3.5">
         <div className="h-5 w-28 rounded bg-slate-200 dark:bg-slate-700" />
         <div className="mt-2 h-4 w-36 rounded bg-slate-200 dark:bg-slate-700" />
       </div>
 
-      <div className={`glass-card rounded-2xl ${isCompact ? 'p-3.5 sm:p-4' : 'p-4 sm:p-5'}`}>
+      <div className="glass-card rounded-2xl p-4 sm:p-5">
         <div className="animate-pulse h-5 w-32 rounded bg-slate-200 dark:bg-slate-700" />
-        <div className={`mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-3 sm:gap-4'}`}>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
           {Array.from({ length: 6 }).map((_, index) => (
-            <SkeletonCard key={index} compact={isCompact} />
+            <SkeletonCard key={index} compact={false} />
           ))}
         </div>
       </div>

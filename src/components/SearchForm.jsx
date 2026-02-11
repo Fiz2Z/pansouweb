@@ -1,9 +1,7 @@
 import React from 'react'
 import { Search, SlidersHorizontal } from 'lucide-react'
 
-const SearchForm = ({ onSearch, isLoading, selectedCloudTypes, keyword, onKeywordChange, onOpenSettings, densityMode = 'comfortable' }) => {
-  const isCompact = densityMode === 'compact'
-
+const SearchForm = ({ onSearch, isLoading, selectedCloudTypes, keyword, onKeywordChange, onOpenSettings }) => {
   const submitSearch = (e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -17,13 +15,13 @@ const SearchForm = ({ onSearch, isLoading, selectedCloudTypes, keyword, onKeywor
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <form onSubmit={submitSearch} className={isCompact ? 'space-y-3' : 'space-y-4'}>
+      <form onSubmit={submitSearch} className="space-y-4">
         <label htmlFor="search-input" className="sr-only">
           搜索关键字
         </label>
 
-        <div className={`glass-card rounded-2xl ${isCompact ? 'p-1.5 sm:p-2' : 'p-2 sm:p-2.5'}`}>
-          <div className={`flex flex-col sm:flex-row ${isCompact ? 'gap-1.5 sm:gap-2' : 'gap-2 sm:gap-3'}`}>
+        <div className="glass-card rounded-2xl p-2 sm:p-2.5">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <div className="relative flex-1">
               <Search className="w-5 h-5 text-slate-400 dark:text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
               <input
@@ -32,7 +30,7 @@ const SearchForm = ({ onSearch, isLoading, selectedCloudTypes, keyword, onKeywor
                 value={keyword}
                 onChange={(e) => onKeywordChange(e.target.value)}
                 placeholder="输入关键字，搜索网盘资源"
-                className={`w-full rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/95 dark:bg-slate-900 px-12 pr-4 text-base text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 ${isCompact ? 'min-h-[48px]' : 'min-h-[52px]'}`}
+                className="w-full min-h-[52px] rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/95 dark:bg-slate-900 px-12 pr-4 text-base text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 disabled={isLoading}
                 autoComplete="off"
               />
@@ -41,7 +39,7 @@ const SearchForm = ({ onSearch, isLoading, selectedCloudTypes, keyword, onKeywor
             <button
               type="submit"
               disabled={!keyword.trim() || isLoading}
-              className={`brand-button min-w-[120px] px-5 text-sm sm:text-base font-semibold cursor-pointer ${isCompact ? 'min-h-[48px]' : ''}`}
+              className="brand-button min-w-[120px] px-5 text-sm sm:text-base font-semibold cursor-pointer"
             >
               <span className="inline-flex items-center justify-center gap-2">
                 <Search className="w-4 h-4" aria-hidden="true" />
@@ -51,7 +49,7 @@ const SearchForm = ({ onSearch, isLoading, selectedCloudTypes, keyword, onKeywor
           </div>
         </div>
 
-        <div className={`flex flex-wrap items-center justify-between ${isCompact ? 'gap-1.5' : 'gap-2'}`}>
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <button
             type="button"
             onClick={onOpenSettings}

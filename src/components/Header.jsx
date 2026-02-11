@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { LayoutGrid, List } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import SettingsModal from './SettingsModal'
 import AboutModal from './AboutModal'
@@ -17,7 +16,7 @@ const Logo = () => (
   </svg>
 )
 
-const Header = ({ selectedCloudTypes, onCloudTypesChange, isSettingsOpen, setIsSettingsOpen, densityMode, onToggleDensityMode }) => {
+const Header = ({ selectedCloudTypes, onCloudTypesChange, isSettingsOpen, setIsSettingsOpen }) => {
   const [apiStatus, setApiStatus] = useState('checking')
 
   useEffect(() => {
@@ -61,15 +60,6 @@ const Header = ({ selectedCloudTypes, onCloudTypesChange, isSettingsOpen, setIsS
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={onToggleDensityMode}
-              className="soft-button px-2.5 sm:px-3.5 text-sm text-slate-700 dark:text-slate-200 bg-white/75 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 cursor-pointer inline-flex items-center gap-1.5"
-              title={densityMode === 'compact' ? '切换为舒适布局' : '切换为紧凑布局'}
-              aria-label={densityMode === 'compact' ? '切换为舒适布局' : '切换为紧凑布局'}
-            >
-              {densityMode === 'compact' ? <List className="w-4 h-4" aria-hidden="true" /> : <LayoutGrid className="w-4 h-4" aria-hidden="true" />}
-              <span className="hidden lg:inline">{densityMode === 'compact' ? '紧凑' : '舒适'}</span>
-            </button>
             <SettingsModal
               selectedCloudTypes={selectedCloudTypes}
               onCloudTypesChange={onCloudTypesChange}

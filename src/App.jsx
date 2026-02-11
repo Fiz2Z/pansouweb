@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import SearchForm from './components/SearchForm'
@@ -6,51 +6,6 @@ import SearchResults, { SearchResultsSkeleton } from './components/SearchResults
 import PWAInstallPrompt from './components/PWAInstallPrompt'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { searchNetdisk } from './services/api'
-
-const featureCards = [
-  {
-    title: '极速检索',
-    desc: '多轮增量回填，结果持续刷新',
-    icon: (
-      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-    gradient: 'from-sky-500 to-blue-600'
-  },
-  {
-    title: '多平台覆盖',
-    desc: '主流网盘与链接类型统一搜索',
-    icon: (
-      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7h18M5 7l1.5 12h11L19 7M9 11v5m6-5v5M10 4h4" />
-      </svg>
-    ),
-    gradient: 'from-indigo-500 to-blue-600'
-  },
-  {
-    title: '清爽体验',
-    desc: '移动端优先，触控反馈更丝滑',
-    icon: (
-      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-2.21 0-4 1.79-4 4v6h8v-6c0-2.21-1.79-4-4-4z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v4M9 4h6" />
-      </svg>
-    ),
-    gradient: 'from-cyan-500 to-sky-600'
-  },
-  {
-    title: 'PWA 支持',
-    desc: '可安装到桌面，离线也能访问',
-    icon: (
-      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h10v10H7z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 4h4M10 20h4M4 10v4M20 10v4" />
-      </svg>
-    ),
-    gradient: 'from-blue-500 to-indigo-600'
-  }
-]
 
 function App() {
   const [searchResults, setSearchResults] = useState(null)
@@ -60,10 +15,6 @@ function App() {
   const [keyword, setKeyword] = useState('')
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [showSearchCard, setShowSearchCard] = useState(false)
-  const [densityMode, setDensityMode] = useState(() => {
-    const saved = localStorage.getItem('densityMode')
-    return saved === 'compact' ? 'compact' : 'comfortable'
-  })
   const [selectedCloudTypes, setSelectedCloudTypes] = useState(() => {
     try {
       const saved = localStorage.getItem('selectedCloudTypes')
@@ -74,14 +25,6 @@ function App() {
   })
 
   const isHomepage = useMemo(() => !hasSearched && !error, [hasSearched, error])
-
-  useEffect(() => {
-    localStorage.setItem('densityMode', densityMode)
-  }, [densityMode])
-
-  const toggleDensityMode = () => {
-    setDensityMode((prev) => (prev === 'comfortable' ? 'compact' : 'comfortable'))
-  }
 
   const handleCloudTypesChange = (cloudTypes) => {
     setSelectedCloudTypes(cloudTypes)
@@ -170,14 +113,12 @@ function App() {
           onCloudTypesChange={handleCloudTypesChange}
           isSettingsOpen={isSettingsOpen}
           setIsSettingsOpen={setIsSettingsOpen}
-          densityMode={densityMode}
-          onToggleDensityMode={toggleDensityMode}
         />
 
         {isHomepage ? (
-          <main className={`flex-1 px-4 ${densityMode === 'compact' ? 'py-6 sm:py-8' : 'py-8 sm:py-12'}`}>
+          <main className="flex-1 px-4 py-8 sm:py-12">
             <div className="max-w-6xl mx-auto">
-              <section className={`glass-card-strong rounded-3xl animate-fade-in ${densityMode === 'compact' ? 'p-5 sm:p-6 lg:p-7' : 'p-6 sm:p-8 lg:p-10'}`}>
+              <section className="glass-card-strong rounded-3xl p-6 sm:p-8 lg:p-10 animate-fade-in">
                 <div className="text-center max-w-3xl mx-auto">
                   <p className="text-sm font-semibold tracking-wide text-sky-700 dark:text-sky-300">PanSou Search Engine</p>
                   <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold text-gradient-primary leading-tight">
@@ -188,7 +129,7 @@ function App() {
                   </p>
                 </div>
 
-                <div className={`${densityMode === 'compact' ? 'mt-6 sm:mt-7' : 'mt-8 sm:mt-10'} max-w-4xl mx-auto`}>
+                <div className="mt-8 sm:mt-10 max-w-4xl mx-auto">
                   <SearchForm
                     onSearch={handleSearch}
                     isLoading={isSearching}
@@ -196,31 +137,21 @@ function App() {
                     keyword={keyword}
                     onKeywordChange={setKeyword}
                     onOpenSettings={() => setIsSettingsOpen(true)}
-                    densityMode={densityMode}
                   />
                 </div>
-              </section>
 
-              <section className={`${densityMode === 'compact' ? 'mt-5 sm:mt-6 gap-3 sm:gap-4' : 'mt-6 sm:mt-8 gap-4 sm:gap-5'} grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 animate-slide-up`}>
-                {featureCards.map((feature) => (
-                  <article
-                    key={feature.title}
-                    className={`glass-card rounded-2xl transition-all duration-300 hover:-translate-y-0.5 ${densityMode === 'compact' ? 'p-4 sm:p-4' : 'p-5 sm:p-6'}`}
-                  >
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center shadow-lg`}>
-                      {feature.icon}
-                    </div>
-                    <h3 className="mt-4 text-lg font-bold text-slate-900 dark:text-slate-100">{feature.title}</h3>
-                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{feature.desc}</p>
-                  </article>
-                ))}
+                <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xs sm:text-sm">
+                  <span className="px-3 py-1.5 rounded-full border border-sky-200 dark:border-sky-700 bg-sky-50/80 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300">多轮增量回填</span>
+                  <span className="px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-700 bg-indigo-50/80 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300">多平台聚合搜索</span>
+                  <span className="px-3 py-1.5 rounded-full border border-cyan-200 dark:border-cyan-700 bg-cyan-50/80 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300">支持安装到桌面</span>
+                </div>
               </section>
             </div>
           </main>
         ) : (
-          <main className={`flex-1 px-4 ${densityMode === 'compact' ? 'py-4 sm:py-6' : 'py-6 sm:py-8'}`}>
-            <div className={`max-w-6xl mx-auto ${densityMode === 'compact' ? 'space-y-4' : 'space-y-6'}`}>
-              <section className={`glass-card rounded-3xl animate-fade-in ${densityMode === 'compact' ? 'p-3 sm:p-4' : 'p-4 sm:p-6'}`}>
+          <main className="flex-1 px-4 py-6 sm:py-8">
+            <div className="max-w-6xl mx-auto space-y-6">
+              <section className="glass-card rounded-3xl p-4 sm:p-6 animate-fade-in">
                 <SearchForm
                   onSearch={handleSearch}
                   isLoading={isSearching}
@@ -228,18 +159,17 @@ function App() {
                   keyword={keyword}
                   onKeywordChange={setKeyword}
                   onOpenSettings={() => setIsSettingsOpen(true)}
-                  densityMode={densityMode}
                 />
               </section>
 
               {isSearching && (
                 <section className="animate-fade-in">
-                  <SearchResultsSkeleton densityMode={densityMode} />
+                  <SearchResultsSkeleton />
                 </section>
               )}
 
               {showSearchCard && (
-                <section className={`glass-card rounded-2xl animate-slide-up ${densityMode === 'compact' ? 'p-3.5 sm:p-4' : 'p-4 sm:p-5'}`}>
+                <section className="glass-card rounded-2xl p-4 sm:p-5 animate-slide-up">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-md">
                       <svg className="w-5 h-5 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -263,7 +193,7 @@ function App() {
 
               {searchResults && !isSearching && (
                 <section className="animate-slide-up">
-                  <SearchResults results={searchResults} densityMode={densityMode} />
+                  <SearchResults results={searchResults} />
                 </section>
               )}
             </div>

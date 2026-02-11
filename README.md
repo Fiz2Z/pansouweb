@@ -1,210 +1,110 @@
-# 全网资源搜索
+# PanSou Web
 
-一个现代化的全网资源搜索前端应用，基于 [PanSou API](https://github.com/fish2018/pansou) 和 React + Vite + Tailwind CSS 构建。
+一个现代化、响应式的网盘资源搜索前端项目，基于 React + Vite + Tailwind CSS 构建，接入 [PanSou API](https://github.com/fish2018/pansou)。
 
-## 功能特性
+仓库地址：`https://github.com/Fiz2Z/pansouweb`
 
-- 🔍 **智能搜索**: 支持关键词搜索，快速找到所需资源
-- 🌐 **多平台支持**: 支持百度网盘、阿里云盘、夸克网盘等 11 种主流平台
-- 🎯 **精准筛选**: 可选择特定资源平台进行搜索
-- 📱 **响应式设计**: 完美适配桌面端和移动端
-- 🎨 **现代化UI**: 采用 Tailwind CSS，界面美观易用
-- 🌙 **夜间模式**: 支持浅色/深色主题切换
-- 📱 **PWA支持**: 可安装到桌面和手机，支持离线使用
-- ⚡ **快速响应**: 基于 Vite 构建，开发和构建速度极快
-- 🐳 **Docker部署**: 支持 Docker 容器化部署，轻量级镜像
+## 项目亮点
 
-## 支持的资源平台
+- 响应式布局：移动端优先，适配桌面与平板
+- 聚合搜索：支持多网盘与多类链接统一检索
+- 持续回填：首轮返回后继续后台增量搜索，结果实时刷新
+- 骨架屏加载：搜索中使用 Skeleton，减少等待焦虑
+- 主题切换：支持浅色 / 深色模式
+- PWA 支持：可安装到桌面，具备基础离线能力
 
-- 百度网盘 (baidu)
-- 阿里云盘 (aliyun)
-- 夸克网盘 (quark)
-- 天翼云盘 (tianyi)
-- UC网盘 (uc)
-- 115网盘 (115)
-- PikPak (pikpak)
-- 迅雷网盘 (xunlei)
-- 123网盘 (123)
-- 磁力链接 (magnet)
-- ED2K链接 (ed2k)
+## 支持的资源类型
+
+- 网盘平台：百度网盘、阿里云盘、夸克网盘、天翼云盘、UC 网盘、115 网盘、PikPak、迅雷网盘、123 网盘、移动云盘、蓝奏云盘
+- 其他链接：磁力链接（magnet）、Torrent、Thunder、ED2K
 
 ## 技术栈
 
-- **前端框架**: React 18
-- **构建工具**: Vite
-- **样式框架**: Tailwind CSS
-- **图标库**: Lucide React
-- **HTTP客户端**: Axios
+- React 18
+- Vite 5
+- Tailwind CSS 3
+- Lucide React
+- Axios
 
-## 快速开始
-
-### 安装依赖
+## 本地开发
 
 ```bash
 npm install
-```
-
-### 开发模式
-
-```bash
 npm run dev
 ```
 
-应用将在 http://localhost:5173 启动。
+默认启动后访问：`http://localhost:5173`
 
-### 构建生产版本
+## 生产构建
 
 ```bash
 npm run build
-```
-
-### 预览生产版本
-
-```bash
 npm run preview
 ```
 
-## 部署方式
+## 环境变量
 
-### 开发环境
+前端通过环境变量配置 API 域名。
 
-```bash
-# 安装依赖
-npm install
-
-# 启动开发服务器
-npm run dev
-```
-
-### Docker 部署
-
-#### 使用预构建镜像（推荐）
-```bash
-# 拉取并运行预构建镜像
-docker run -d -p 3000:80 -e API_DOMAIN=your-domain.com ghcr.io/yuucccc/sousou:latest
-
-# 或使用 docker-compose
-# 修改 docker-compose.yml 中的 image 字段
-# image: ghcr.io/yuucccc/sousou:latest
-docker-compose up -d
-```
-
-#### 本地构建
-```bash
-# 构建并启动
-docker-compose up --build -d
-
-# 访问应用
-http://localhost:3000
-```
-
-### 环境变量配置
-
-目前仅支持通过环境变量配置 API 域名：
+开发环境可在项目根目录创建 `.env`：
 
 ```bash
-# 开发环境 - 创建 .env 文件
 VITE_API_DOMAIN=localhost
-
-# Docker 部署 - 在 docker-compose.yml 中设置
-environment:
-  - API_DOMAIN=your-domain.com
-
-# 支持完整URL（包含协议和端口）
-environment:
-  - API_DOMAIN=https://your-domain.com:8888
 ```
 
-**注意**: 博客信息（作者名称、博客地址、博客名称）已内置在代码中，无需通过环境变量配置。
+你也可以使用完整 URL（包含协议和端口）：
 
-详细配置说明请参考 [环境变量配置文档](docs/ENVIRONMENT.md)。
-
-### PWA 功能
-
-应用支持 Progressive Web App (PWA) 功能：
-
-- **安装到桌面**: 在支持的浏览器中可以直接安装到桌面
-- **移动端优化**: 在 iOS Safari 和 Android Chrome 中可添加到主屏幕
-- **离线缓存**: 基本的离线访问支持
-- **原生体验**: 全屏显示，类似原生应用
-
-## 项目结构
-
+```bash
+VITE_API_DOMAIN=https://your-domain.com:8888
 ```
+
+更多细节请查看：`docs/ENVIRONMENT.md`
+
+## Docker 部署
+
+```bash
+docker-compose up -d --build
+```
+
+部署后默认访问：`http://localhost:3000`
+
+如需修改 API 域名，请在 `docker-compose.yml` 中设置容器环境变量 `API_DOMAIN`。
+
+## 目录结构
+
+```text
 src/
-├── components/          # React 组件
-│   ├── Header.jsx      # 页面头部
-│   ├── SearchForm.jsx  # 搜索表单
-│   ├── SearchResults.jsx # 搜索结果展示
-│   ├── LoadingSpinner.jsx # 加载动画
-│   ├── AboutModal.jsx  # 关于弹窗
-│   ├── SettingsModal.jsx # 设置弹窗
-│   ├── ThemeToggle.jsx # 主题切换
-│   ├── PWAInstallPrompt.jsx # PWA安装提示
-│   └── Footer.jsx      # 页面底部
-├── contexts/           # React Context
-│   └── ThemeContext.jsx # 主题上下文
-├── services/           # API 服务
-│   └── api.js         # API 调用封装
-├── App.jsx            # 主应用组件
-├── main.jsx           # 应用入口
-└── index.css          # 全局样式
+  components/
+    Header.jsx
+    SearchForm.jsx
+    SearchResults.jsx
+    SettingsModal.jsx
+    AboutModal.jsx
+    ThemeToggle.jsx
+    PWAInstallPrompt.jsx
+    Footer.jsx
+  contexts/
+    ThemeContext.jsx
+  services/
+    api.js
+  App.jsx
+  main.jsx
+  index.css
 ```
 
 ## 使用说明
 
-### 基本使用
-1. 在搜索框中输入关键词
-2. 可选择特定的网盘类型进行筛选
-3. 点击"开始搜索"按钮
-4. 浏览搜索结果，点击链接访问资源
-5. 支持提取码一键复制功能
+1. 输入关键词并发起搜索
+2. 按需在“设置”中选择资源类型筛选
+3. 查看分组结果（默认折叠）
+4. 对支持直达的平台点击“直达”；磁力/种子类可一键复制链接
+5. 如资源有提取码，可点击复制
 
-### PWA 安装
-- **桌面端**: Chrome/Edge 浏览器地址栏会显示安装图标
-- **iOS**: Safari 中点击分享按钮 → "添加到主屏幕"
-- **Android**: Chrome 中会显示"添加到主屏幕"横幅提示
+## 开源致谢
 
-## 部署到生产环境
+- [fish2018/pansou](https://github.com/fish2018/pansou)
+- React / Vite / Tailwind CSS / Lucide
 
-### GitHub Container Registry
+## License
 
-项目会自动构建Docker镜像并推送到GitHub Container Registry：
-
-```bash
-# 拉取最新镜像
-docker pull ghcr.io/yuucccc/sousou:latest
-
-# 运行容器
-docker run -d \
-  --name sousouweb \
-  -p 3000:80 \
-  -e API_DOMAIN=your-domain.com \
-  ghcr.io/yuucccc/sousou:latest
-```
-
-### 环境变量说明
-
-| 变量名 | 说明 | 默认值 | 示例 |
-|--------|------|--------|------|
-| `API_DOMAIN` | API服务域名 | `localhost` | `api.example.com` |
-
-**内置信息**:
-- 作者名称: `Yuccc`
-- 博客地址: `https://blog.yuccc.cc`
-- 博客名称: `Yuc's Blog`
-
-## 致谢
-
-本项目基于以下开源项目构建：
-
-- **[PanSou](https://github.com/fish2018/pansou)** - 高性能网盘资源搜索API服务
-- **React** - 用户界面构建库
-- **Vite** - 现代化构建工具
-- **Tailwind CSS** - 原子化CSS框架
-
-特别感谢 [fish2018](https://github.com/fish2018) 开发的 PanSou API，为本项目提供了强大的搜索功能支持。
-
-## 许可证
-
-本项目采用 [MIT 许可证](LICENSE)。
+MIT
