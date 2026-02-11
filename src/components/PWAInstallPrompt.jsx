@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Download, X } from 'lucide-react'
 
 const PWAInstallPrompt = () => {
@@ -6,6 +6,9 @@ const PWAInstallPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false)
 
   useEffect(() => {
+    const dismissed = localStorage.getItem('pwa-prompt-dismissed')
+    if (dismissed) return
+
     const handler = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
@@ -18,11 +21,8 @@ const PWAInstallPrompt = () => {
 
   const handleInstall = async () => {
     if (!deferredPrompt) return
-
     deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
-    
-    console.log(`User response to the install prompt: ${outcome}`)
+    await deferredPrompt.userChoice
     setDeferredPrompt(null)
     setShowPrompt(false)
   }
@@ -32,45 +32,37 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed', 'true')
   }
 
-  // 检查是否已经被用户忽略
-  useEffect(() => {
-    const dismissed = localStorage.getItem('pwa-prompt-dismissed')
-    if (dismissed) {
-      setShowPrompt(false)
-    }
-  }, [])
-
   if (!showPrompt) return null
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 z-50 animate-slide-up">
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center space-x-2">
-          <Download className="w-5 h-5 text-primary-600" />
-          <h3 className="font-medium text-gray-900 dark:text-gray-100">添加到主屏幕</h3>
+    <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:w-[360px] z-40 glass-card-strong rounded-2xl p-4 animate-slide-up">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center">
+            <Download className="w-4 h-4" aria-hidden="true" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">安装应用</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-300">支持离线访问和桌面快捷方式</p>
+          </div>
         </div>
+
         <button
           onClick={handleDismiss}
-          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          className="soft-button w-9 h-9 inline-flex items-center justify-center bg-white/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 cursor-pointer"
+          aria-label="关闭安装提示"
         >
-          <X className="w-4 h-4" />
+          <X className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
-      
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        安装此应用以获得更好的体验，支持离线使用
-      </p>
-      
-      <div className="flex space-x-2">
-        <button
-          onClick={handleInstall}
-          className="flex-1 bg-primary-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
-        >
-          安装
+
+      <div className="mt-3 flex gap-2">
+        <button onClick={handleInstall} className="brand-button flex-1 text-sm font-semibold cursor-pointer">
+          立即安装
         </button>
         <button
           onClick={handleDismiss}
-          className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+          className="soft-button px-3 text-sm text-slate-600 dark:text-slate-300 bg-white/75 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 cursor-pointer"
         >
           稍后
         </button>

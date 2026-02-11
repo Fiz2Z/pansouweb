@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sun, Moon } from 'lucide-react'
+import { Moon, Sun } from 'lucide-react'
 import { useTheme } from '../contexts/ThemeContext'
 
 const ThemeToggle = () => {
@@ -8,14 +8,11 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 min-h-[42px] min-w-[42px]"
+      className="soft-button w-11 h-11 inline-flex items-center justify-center bg-white/75 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 cursor-pointer"
       title={isDark ? '切换到浅色模式' : '切换到深色模式'}
+      aria-label={isDark ? '切换到浅色模式' : '切换到深色模式'}
     >
-      {isDark ? (
-        <Sun className="w-5 h-5 text-yellow-500" />
-      ) : (
-        <Moon className="w-5 h-5 text-gray-600" />
-      )}
+      {isDark ? <Sun className="w-[18px] h-[18px] text-amber-400" aria-hidden="true" /> : <Moon className="w-[18px] h-[18px] text-slate-700" aria-hidden="true" />}
     </button>
   )
 }

@@ -8,9 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['Poppins', 'sans-serif'],
-        body: ['Open Sans', 'sans-serif'],
-        sans: ['Open Sans', 'sans-serif'],
+        heading: ['Outfit', 'sans-serif'],
+        body: ['Manrope', 'sans-serif'],
+        sans: ['Manrope', 'sans-serif'],
       },
       colors: {
         primary: {

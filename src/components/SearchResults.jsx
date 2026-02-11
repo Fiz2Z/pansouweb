@@ -1,371 +1,253 @@
-import React, { useState } from 'react'
-import { ExternalLink, Copy, Eye, Key } from 'lucide-react'
+import React, { useMemo, useState } from 'react'
+import { CalendarClock, Copy, ExternalLink, Key, SearchX } from 'lucide-react'
 
 const CLOUD_TYPE_CONFIG = {
-  baidu: { name: '百度网盘', color: 'bg-blue-500' },
-  aliyun: { name: '阿里云盘', color: 'bg-orange-500' },
-  quark: { name: '夸克网盘', color: 'bg-purple-500' },
-  tianyi: { name: '天翼云盘', color: 'bg-red-500' },
-  uc: { name: 'UC网盘', color: 'bg-green-500' },
-  '115': { name: '115网盘', color: 'bg-yellow-500' },
-  pikpak: { name: 'PikPak', color: 'bg-pink-500' },
-  xunlei: { name: '迅雷网盘', color: 'bg-indigo-500' },
-  thunder: { name: 'Thunder', color: 'bg-indigo-600' },
-  '123': { name: '123网盘', color: 'bg-cyan-500' },
-  magnet: { name: '磁力链接', color: 'bg-gray-500' },
-  ed2k: { name: 'ED2K链接', color: 'bg-gray-600' },
-  mobile: { name: '移动云盘', color: 'bg-teal-500' },
-  lanzou: { name: '蓝奏云盘', color: 'bg-blue-600' },
-  torrent: { name: 'Torrent', color: 'bg-gray-700' }
+  baidu: { name: '百度网盘', color: 'from-blue-500 to-blue-600' },
+  aliyun: { name: '阿里云盘', color: 'from-orange-500 to-amber-500' },
+  quark: { name: '夸克网盘', color: 'from-purple-500 to-indigo-500' },
+  tianyi: { name: '天翼云盘', color: 'from-rose-500 to-red-500' },
+  uc: { name: 'UC网盘', color: 'from-green-500 to-emerald-500' },
+  '115': { name: '115网盘', color: 'from-yellow-500 to-amber-500' },
+  pikpak: { name: 'PikPak', color: 'from-pink-500 to-fuchsia-500' },
+  xunlei: { name: '迅雷网盘', color: 'from-indigo-500 to-blue-500' },
+  thunder: { name: 'Thunder', color: 'from-indigo-600 to-slate-700' },
+  '123': { name: '123网盘', color: 'from-cyan-500 to-sky-600' },
+  magnet: { name: '磁力链接', color: 'from-slate-500 to-slate-700' },
+  ed2k: { name: 'ED2K', color: 'from-slate-600 to-slate-800' },
+  mobile: { name: '移动云盘', color: 'from-teal-500 to-cyan-600' },
+  lanzou: { name: '蓝奏云盘', color: 'from-blue-600 to-indigo-600' },
+  torrent: { name: 'Torrent', color: 'from-zinc-600 to-zinc-800' }
 }
 
-const LinkCard = ({ link, cloudType }) => {
-  const [copiedItem, setCopiedItem] = useState(null)
-
-  const config = CLOUD_TYPE_CONFIG[cloudType] || { name: cloudType, color: 'bg-gray-500', icon: '📁' }
-
-  const copyToClipboard = async (text, type) => {
-    try {
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-
-      if (isIOS) {
-        // iOS 最佳实践方法
-        return new Promise((resolve, reject) => {
-          const textArea = document.createElement('textarea')
-          textArea.value = text
-
-          // 关键：让元素可见但不影响布局
-          textArea.style.position = 'absolute'
-          textArea.style.left = '0'
-          textArea.style.top = '0'
-          textArea.style.width = '2em'
-          textArea.style.height = '2em'
-          textArea.style.padding = '0'
-          textArea.style.border = 'none'
-          textArea.style.outline = 'none'
-          textArea.style.boxShadow = 'none'
-          textArea.style.background = 'transparent'
-          textArea.style.fontSize = '16px' // 防止iOS缩放
-          textArea.style.zIndex = '-1'
-          textArea.setAttribute('readonly', '')
-
-          document.body.appendChild(textArea)
-
-          // 重要：使用 requestAnimationFrame 确保DOM更新
-          requestAnimationFrame(() => {
-            try {
-              textArea.select()
-              textArea.setSelectionRange(0, text.length)
-
-              const successful = document.execCommand('copy')
-              document.body.removeChild(textArea)
-
-              if (successful) {
-                setCopiedItem(type)
-                setTimeout(() => setCopiedItem(null), 2000)
-                resolve()
-              } else {
-                reject(new Error('iOS复制失败'))
-              }
-            } catch (error) {
-              document.body.removeChild(textArea)
-              reject(error)
-            }
-          })
-        })
-      } else {
-        // 非 iOS 设备
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text)
-        } else {
-          const textArea = document.createElement('textarea')
-          textArea.value = text
-          textArea.style.position = 'fixed'
-          textArea.style.left = '-999999px'
-          textArea.style.top = '-999999px'
-          document.body.appendChild(textArea)
-          textArea.focus()
-          textArea.select()
-
-          const successful = document.execCommand('copy')
-          textArea.remove()
-
-          if (!successful) {
-            throw new Error('复制失败')
-          }
-        }
-
-        setCopiedItem(type)
-        setTimeout(() => setCopiedItem(null), 2000)
-      }
-
-    } catch (err) {
-      console.error('复制失败:', err)
-
-      // 更友好的错误处理
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-        // iOS: 直接显示内容让用户手动复制
-        const userWantsCopy = confirm('自动复制失败，点击确定查看内容进行手动复制')
-        if (userWantsCopy) {
-          // 使用 prompt 显示内容，用户可以手动选择复制
-          prompt('请长按选择并复制以下内容：', text)
-        }
-      } else {
-        alert('复制失败，请手动复制')
-      }
-    }
+const formatDate = (value) => {
+  try {
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime()) || date.getFullYear() === 1) return '未知时间'
+    return date.toLocaleString('zh-CN', {
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  } catch {
+    return '未知时间'
   }
+}
 
-  const formatDate = (dateString) => {
-    try {
-      const date = new Date(dateString)
-      // 检查是否是无效日期或默认的0001年
-      if (isNaN(date.getTime()) || date.getFullYear() === 1) {
-        return '未知日期'
-      }
-      return date.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    } catch {
-      return '未知日期'
+const copyText = async (text) => {
+  if (!text) return false
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text)
+      return true
     }
+    const textarea = document.createElement('textarea')
+    textarea.value = text
+    textarea.style.position = 'fixed'
+    textarea.style.left = '-9999px'
+    document.body.appendChild(textarea)
+    textarea.select()
+    const ok = document.execCommand('copy')
+    textarea.remove()
+    return ok
+  } catch {
+    return false
   }
+}
 
-  const openLink = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
+const LinkCard = ({ link, cloudType, densityMode = 'comfortable' }) => {
+  const isCompact = densityMode === 'compact'
+  const [copiedType, setCopiedType] = useState('')
+  const cloud = CLOUD_TYPE_CONFIG[cloudType] || { name: cloudType, color: 'from-slate-500 to-slate-700' }
+  const isCopyOnlyType = ['magnet', 'torrent', 'thunder', 'ed2k'].includes(cloudType)
 
-    // 所有设备都使用新标签页打开
-    window.open(link.url, '_blank', 'noopener,noreferrer')
+  const onCopy = async (text, type) => {
+    const copied = await copyText(text)
+    if (!copied) return
+    setCopiedType(type)
+    window.setTimeout(() => setCopiedType(''), 1500)
   }
 
   return (
-    <div className="group bg-white/85 dark:bg-slate-800/85 rounded-2xl shadow-md border border-white/70 dark:border-slate-700 hover:shadow-xl hover:border-sky-300 dark:hover:border-sky-600 transition-all duration-300 overflow-hidden flex flex-col h-full min-h-[172px] sm:min-h-[180px] hover:-translate-y-0.5 sm:hover:-translate-y-1 cursor-pointer backdrop-blur-xl">
-      {/* 头部标签区域 */}
-      <div className="relative p-4 sm:p-5 pb-2 sm:pb-3">
-        <div className="flex items-start justify-between mb-3">
-          <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold font-heading text-white ${config.color} shadow-md`}>
-            {config.name}
-          </span>
-          {link.datetime && (
-            <span className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-body pl-2 text-right">
-              {formatDate(link.datetime)}
-            </span>
-          )}
-        </div>
-
-        {/* 资源标题 */}
-        <h3 className="text-sm sm:text-base font-bold font-heading text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors mb-2 sm:mb-3">
-          {link.note || '未命名资源'}
-        </h3>
+    <article className={`glass-card rounded-2xl flex flex-col h-full animate-scale-in ${isCompact ? 'p-3 sm:p-3.5' : 'p-4 sm:p-5'}`}>
+      <div className="flex items-start justify-between gap-2">
+        <span className={`inline-flex items-center rounded-lg px-3 py-1 text-xs font-semibold text-white bg-gradient-to-r ${cloud.color}`}>
+          {cloud.name}
+        </span>
+        <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+          <CalendarClock className="w-3.5 h-3.5" aria-hidden="true" />
+          {formatDate(link.datetime)}
+        </span>
       </div>
 
-      {/* 占位区域 */}
-      <div className="flex-grow"></div>
+      <h3 className={`text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 line-clamp-2 ${isCompact ? 'mt-2.5' : 'mt-3'}`}>
+        {link.note || '未命名资源'}
+      </h3>
 
-      {/* 底部操作区域 */}
-      <div className="p-4 sm:p-5 pt-2 bg-slate-50/70 dark:bg-slate-900/55">
-        <div className="flex items-center justify-between gap-2 sm:gap-3">
-          {/* 左侧提取码 */}
-          {link.password ? (
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                copyToClipboard(link.password, 'password')
-              }}
-              onTouchStart={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                copyToClipboard(link.password, 'password')
-              }}
-              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg text-xs font-semibold font-body text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-all duration-200 shadow-sm hover:shadow-md touch-manipulation"
-            >
-              <Key className="w-3.5 h-3.5" />
-              <span>{copiedItem === 'password' ? '已复制' : link.password}</span>
-            </button>
-          ) : (
-            <div></div>
-          )}
+      <div className={`mt-auto flex items-center justify-between gap-2 ${isCompact ? 'pt-3' : 'pt-4'}`}>
+        {link.password ? (
+          <button
+            type="button"
+            onClick={() => onCopy(link.password, 'password')}
+            className="soft-button px-3 text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-700 inline-flex items-center gap-1.5 cursor-pointer"
+            aria-label="复制提取码"
+          >
+            <Key className="w-3.5 h-3.5" aria-hidden="true" />
+            {copiedType === 'password' ? '已复制' : `提取码 ${link.password}`}
+          </button>
+        ) : (
+          <span className="text-xs text-slate-400 dark:text-slate-500">无提取码</span>
+        )}
 
-          {/* 右侧操作按钮 */}
-          {['magnet', 'torrent', 'thunder', 'ed2k'].includes(cloudType) ? (
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                copyToClipboard(link.url, 'url')
-              }}
-              onTouchStart={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                copyToClipboard(link.url, 'url')
-              }}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-xs sm:text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-[1.02] touch-manipulation"
-            >
-              <Copy className="w-4 h-4" />
-              <span>{copiedItem === 'url' ? '已复制' : '复制链接'}</span>
-            </button>
-          ) : (
-            <button
-              onClick={openLink}
-              onTouchStart={openLink}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 hover:shadow-lg text-white text-xs sm:text-sm font-semibold font-heading rounded-lg transition-all duration-200 shadow-md hover:scale-[1.02] touch-manipulation"
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span>直达</span>
-            </button>
-          )}
-        </div>
+        {isCopyOnlyType ? (
+          <button
+            type="button"
+            onClick={() => onCopy(link.url, 'url')}
+            className="brand-button px-3.5 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 cursor-pointer"
+            aria-label="复制链接"
+          >
+            <Copy className="w-4 h-4" aria-hidden="true" />
+            {copiedType === 'url' ? '已复制' : '复制链接'}
+          </button>
+        ) : (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="brand-button px-3.5 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5"
+            aria-label="打开资源链接"
+          >
+            <ExternalLink className="w-4 h-4" aria-hidden="true" />
+            直达
+          </a>
+        )}
       </div>
-    </div>
+    </article>
   )
 }
 
-const IntegratedCloudCard = ({ type, links, config }) => {
-  const [isExpanded, setIsExpanded] = useState(true)
+const CloudSection = ({ type, links, densityMode = 'comfortable' }) => {
+  const isCompact = densityMode === 'compact'
+  const [expanded, setExpanded] = useState(true)
   const [showAll, setShowAll] = useState(false)
-
-  const displayLinks = showAll ? links : links.slice(0, 3)
-  const hasMore = links.length > 3
+  const config = CLOUD_TYPE_CONFIG[type] || { name: type, color: 'from-slate-500 to-slate-700' }
+  const visibleLinks = showAll ? links : links.slice(0, 6)
+  const hasMore = links.length > 6
 
   return (
-    <div className="bg-white/85 dark:bg-slate-800/85 rounded-2xl border border-white/70 dark:border-slate-700 overflow-hidden animate-fade-in shadow-md hover:shadow-xl transition-all duration-300 backdrop-blur-xl">
-      {/* 卡片头部 */}
-      <div
-        className="flex items-center justify-between p-4 sm:p-5 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors border-b border-slate-100 dark:border-slate-700"
-        onClick={() => setIsExpanded(!isExpanded)}
+    <section className="glass-card rounded-2xl overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setExpanded((prev) => !prev)}
+        className={`w-full text-left bg-transparent hover:bg-slate-100/50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer ${isCompact ? 'px-3.5 sm:px-4 py-3' : 'px-4 sm:px-5 py-4'}`}
       >
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold font-heading text-white ${config.color} shadow-md`}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className={`inline-flex items-center rounded-lg px-3 py-1 text-xs font-semibold text-white bg-gradient-to-r ${config.color}`}>
               {config.name}
             </span>
-            <span className="text-sm sm:text-lg font-bold font-heading text-slate-900 dark:text-white truncate">
-              {links.length} 条资源
-            </span>
+            <span className="text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-200 truncate">{links.length} 条资源</span>
           </div>
+          <svg
+            className={`w-5 h-5 text-slate-500 transition-transform ${expanded ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
 
-        <svg
-          className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-
-      {/* 卡片内容 */}
-      {isExpanded && (
-        <div>
-          <div className="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-            {displayLinks.map((link, index) => (
-              <div
-                key={index}
-                className="animate-scale-in"
-                style={{
-                    animationDelay: `${index * 40}ms`,
-                    animationFillMode: 'both'
-                  }}
-                >
-                <LinkCard link={link} cloudType={type} />
-              </div>
+      {expanded && (
+        <div className={isCompact ? 'px-3.5 sm:px-4 pb-3.5 sm:pb-4' : 'px-4 sm:px-5 pb-4 sm:pb-5'}>
+          <div className={`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-3 sm:gap-4'}`}>
+            {visibleLinks.map((link, index) => (
+              <LinkCard key={`${type}-${index}`} link={link} cloudType={type} densityMode={densityMode} />
             ))}
           </div>
 
-          {/* 查看全部按钮 */}
           {hasMore && (
-              <div className="border-t border-gray-100 dark:border-gray-700 p-4">
-                <button
-                  onClick={() => setShowAll(!showAll)}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300 rounded-xl hover:bg-sky-100 dark:hover:bg-sky-900/30 transition-all duration-200 font-semibold font-heading border border-sky-200 dark:border-sky-800"
-                >
-                {showAll ? (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
-                    </svg>
-                    <span>收起 ({links.length - 3} 条)</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                    <span>查看全部 {links.length} 条资源</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowAll((prev) => !prev)}
+              className="mt-4 w-full soft-button text-sm font-semibold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-900/20 border-sky-200 dark:border-sky-700 cursor-pointer"
+            >
+              {showAll ? '收起部分结果' : `查看全部 ${links.length} 条资源`}
+            </button>
           )}
         </div>
       )}
-    </div>
+    </section>
   )
 }
 
-const SearchResults = ({ results }) => {
-  // 获取可用的网盘类型和数量，并按资源数量降序排列
-  const cloudTypes = results?.merged_by_type
-    ? Object.keys(results.merged_by_type).sort((a, b) => {
-      const countA = results.merged_by_type[a]?.length || 0
-      const countB = results.merged_by_type[b]?.length || 0
-      return countB - countA // 降序排列
-    })
-    : []
+const SearchResults = ({ results, densityMode = 'comfortable' }) => {
+  const isCompact = densityMode === 'compact'
+  const cloudTypes = useMemo(() => {
+    if (!results?.merged_by_type) return []
+    return Object.keys(results.merged_by_type).sort(
+      (a, b) => (results.merged_by_type[b]?.length || 0) - (results.merged_by_type[a]?.length || 0)
+    )
+  }, [results])
 
-  if (!results || !results.merged_by_type || Object.keys(results.merged_by_type).length === 0) {
+  if (!results || !results.merged_by_type || cloudTypes.length === 0) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-500 dark:text-gray-400">没有找到相关资源</p>
+      <div className="glass-card rounded-2xl p-8 text-center animate-fade-in">
+        <SearchX className="w-10 h-10 mx-auto text-slate-400" aria-hidden="true" />
+        <h3 className="mt-3 text-lg font-bold text-slate-900 dark:text-slate-100">暂无结果</h3>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">请尝试更换关键词或调整筛选条件。</p>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* 搜索统计 */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3 rounded-2xl border border-white/70 dark:border-slate-700 bg-white/75 dark:bg-slate-800/75 backdrop-blur-xl px-4 sm:px-5 py-3">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+    <div className={isCompact ? 'space-y-3 sm:space-y-4' : 'space-y-4 sm:space-y-5'}>
+      <div className={`glass-card rounded-2xl ${isCompact ? 'px-3.5 sm:px-4 py-3' : 'px-4 sm:px-5 py-3.5'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
           <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">搜索结果</h2>
-          <span className="text-sm sm:text-base text-slate-500 dark:text-slate-400">
-            共找到 {results.total || 0} 条结果
-          </span>
+          <p className="text-sm text-slate-600 dark:text-slate-300">共找到 {results.total || 0} 条资源</p>
         </div>
       </div>
 
-      {cloudTypes.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <Eye className="w-8 h-8 text-gray-400" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">暂无搜索结果</h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            请尝试使用其他关键词或调整搜索条件
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {/* 整合卡片列表 */}
-          {cloudTypes.map(type => {
-            const links = results.merged_by_type[type] || []
-            const config = CLOUD_TYPE_CONFIG[type] || { name: type, color: 'bg-gray-500' }
+      {cloudTypes.map((type) => (
+        <CloudSection key={type} type={type} links={results.merged_by_type[type] || []} densityMode={densityMode} />
+      ))}
+    </div>
+  )
+}
 
-            return (
-              <IntegratedCloudCard
-                key={type}
-                type={type}
-                links={links}
-                config={config}
-              />
-            )
-          })}
+const SkeletonCard = ({ compact }) => (
+  <div className={`glass-card rounded-2xl animate-pulse ${compact ? 'p-3 sm:p-3.5' : 'p-4 sm:p-5'}`}>
+    <div className="h-4 w-20 rounded bg-slate-200 dark:bg-slate-700" />
+    <div className="mt-3 h-4 w-11/12 rounded bg-slate-200 dark:bg-slate-700" />
+    <div className="mt-2 h-4 w-4/6 rounded bg-slate-200 dark:bg-slate-700" />
+    <div className="mt-4 flex items-center justify-between gap-2">
+      <div className="h-8 w-24 rounded bg-slate-200 dark:bg-slate-700" />
+      <div className="h-8 w-20 rounded bg-slate-200 dark:bg-slate-700" />
+    </div>
+  </div>
+)
+
+export const SearchResultsSkeleton = ({ densityMode = 'comfortable' }) => {
+  const isCompact = densityMode === 'compact'
+
+  return (
+    <div className={isCompact ? 'space-y-3 sm:space-y-4' : 'space-y-4 sm:space-y-5'} aria-hidden="true">
+      <div className={`glass-card rounded-2xl animate-pulse ${isCompact ? 'px-3.5 sm:px-4 py-3' : 'px-4 sm:px-5 py-3.5'}`}>
+        <div className="h-5 w-28 rounded bg-slate-200 dark:bg-slate-700" />
+        <div className="mt-2 h-4 w-36 rounded bg-slate-200 dark:bg-slate-700" />
+      </div>
+
+      <div className={`glass-card rounded-2xl ${isCompact ? 'p-3.5 sm:p-4' : 'p-4 sm:p-5'}`}>
+        <div className="animate-pulse h-5 w-32 rounded bg-slate-200 dark:bg-slate-700" />
+        <div className={`mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-3 sm:gap-4'}`}>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <SkeletonCard key={index} compact={isCompact} />
+          ))}
         </div>
-      )}
+      </div>
     </div>
   )
 }
