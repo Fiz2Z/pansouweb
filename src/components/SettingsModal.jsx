@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useId, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Check, Settings, X } from 'lucide-react'
+import { useDialogAccessibility } from '../hooks/useDialogAccessibility'
 
 const CLOUD_TYPES = [
   { value: 'baidu', label: '百度网盘', color: 'bg-blue-500' },
@@ -80,10 +81,14 @@ const TypeGrid = ({ title, items, selected, onToggle, color = 'sky' }) => (
 
 const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOpen }) => {
   const [tempSelected, setTempSelected] = useState(selectedCloudTypes)
+  const titleId = useId()
+  const descriptionId = useId()
 
   useEffect(() => {
-    setTempSelected(selectedCloudTypes)
-  }, [selectedCloudTypes])
+    if (isOpen) {
+      setTempSelected(selectedCloudTypes)
+    }
+  }, [isOpen, selectedCloudTypes])
 
   const toggleCloudType = (cloudType) => {
     setTempSelected((prev) =>
@@ -99,23 +104,28 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
     setTempSelected([])
   }
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     onCloudTypesChange(tempSelected)
     setIsOpen(false)
-  }
+  }, [onCloudTypesChange, setIsOpen, tempSelected])
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setTempSelected(selectedCloudTypes)
     setIsOpen(false)
-  }
+  }, [selectedCloudTypes, setIsOpen])
+
+  const dialogRef = useDialogAccessibility(isOpen, handleCancel)
 
   return (
     <>
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
         className="soft-button px-3 sm:px-3.5 text-sm text-slate-700 dark:text-slate-200 bg-white/75 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 cursor-pointer inline-flex items-center gap-1.5"
         title="资源搜索设置"
         aria-label="打开资源搜索设置"
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
       >
         <Settings className="w-4 h-4" aria-hidden="true" />
         <span className="hidden sm:inline">设置</span>
@@ -123,21 +133,30 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
 
       {isOpen &&
         createPortal(
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-            <div className="absolute inset-0 bg-slate-900/55 backdrop-blur-sm" onClick={handleCancel} />
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4" role="presentation">
+            <div className="absolute inset-0 bg-slate-900/55 backdrop-blur-sm" onClick={handleCancel} aria-hidden="true" />
 
-            <div className="relative w-full sm:max-w-3xl rounded-t-3xl sm:rounded-2xl glass-card-strong border border-slate-200 dark:border-slate-700 max-h-[92vh] sm:max-h-[88vh] flex flex-col animate-slide-up">
+            <div
+              ref={dialogRef}
+              className="relative w-full sm:max-w-3xl rounded-t-3xl sm:rounded-2xl glass-card-strong border border-slate-200 dark:border-slate-700 max-h-[92vh] sm:max-h-[88vh] flex flex-col animate-slide-up"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={titleId}
+              aria-describedby={descriptionId}
+              tabIndex={-1}
+            >
               <header className="px-4 sm:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center">
                     <Settings className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">搜索筛选设置</h2>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">可按平台和链接类型筛选</p>
+                    <h2 id={titleId} className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">搜索筛选设置</h2>
+                    <p id={descriptionId} className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">可按平台和链接类型筛选</p>
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={handleCancel}
                   className="soft-button w-10 h-10 inline-flex items-center justify-center bg-white/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 cursor-pointer"
                   aria-label="关闭设置"
@@ -171,12 +190,14 @@ const SettingsModal = ({ selectedCloudTypes, onCloudTypesChange, isOpen, setIsOp
               <footer className="px-4 sm:px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <button
+                    type="button"
                     onClick={handleCancel}
                     className="soft-button flex-1 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 cursor-pointer"
                   >
                     取消
                   </button>
                   <button
+                    type="button"
                     onClick={handleSave}
                     className="brand-button flex-1 text-sm font-semibold cursor-pointer"
                   >

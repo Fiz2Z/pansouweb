@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>全网资源搜索</title>
     <meta name="description" content="高效搜索全网资源的工具" />
-    
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#dbeafe" />
     <meta name="theme-color" content="#1f2937" media="(prefers-color-scheme: dark)" />
@@ -14,13 +14,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="light-content" />
     <meta name="apple-mobile-web-app-title" content="全网资源搜索" />
-    
+
     <!-- Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    
+
     <!-- iOS Icons -->
     <link rel="apple-touch-icon" href="/icon.svg" />
-    
+
     <!-- iOS Splash Screens -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="format-detection" content="telephone=no" />
@@ -28,19 +28,19 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    
+
     <script>
-      // PWA Service Worker 注册
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-              console.log('SW registered: ', registration);
+        window.addEventListener('load', async () => {
+          try {
+            const registration = await navigator.serviceWorker.register('/sw.js', {
+              updateViaCache: 'none'
             })
-            .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
-            });
-        });
+            console.log('SW registered: ', registration)
+          } catch (registrationError) {
+            console.log('SW registration failed: ', registrationError)
+          }
+        })
       }
     </script>
   </body>

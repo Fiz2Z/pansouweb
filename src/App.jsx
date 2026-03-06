@@ -1,11 +1,67 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import SearchForm from './components/SearchForm'
 import SearchResults, { SearchResultsSkeleton } from './components/SearchResults'
 import PWAInstallPrompt from './components/PWAInstallPrompt'
 import { ThemeProvider } from './contexts/ThemeContext'
-import { searchNetdisk } from './services/api'
+import { isRequestCancelled, searchNetdisk } from './services/api'
+
+const createAbortError = () => {
+  const error = new Error('Search aborted')
+  error.name = 'AbortError'
+  error.code = 'ERR_CANCELED'
+  return error
+}
+
+const waitWithAbort = (delay, signal) =>
+  new Promise((resolve, reject) => {
+    const timeoutId = window.setTimeout(() => {
+      signal?.removeEventListener('abort', handleAbort)
+      resolve()
+    }, delay)
+
+    const handleAbort = () => {
+      window.clearTimeout(timeoutId)
+      signal?.removeEventListener('abort', handleAbort)
+      reject(createAbortError())
+    }
+
+    if (signal) {
+      if (signal.aborted) {
+        handleAbort()
+        return
+      }
+
+      signal.addEventListener('abort', handleAbort, { once: true })
+    }
+  })
+
+const mergeSearchResults = (previousResults, incomingResults) => {
+  if (!previousResults) {
+    return incomingResults
+  }
+
+  const mergedByType = { ...(previousResults.merged_by_type || {}) }
+
+  Object.keys(incomingResults?.merged_by_type || {}).forEach((type) => {
+    const previousLinks = mergedByType[type] || []
+    const nextLinks = incomingResults.merged_by_type[type] || []
+    const existingUrls = new Set(previousLinks.map((link) => link.url))
+    const uniqueLinks = nextLinks.filter((link) => !existingUrls.has(link.url))
+
+    if (uniqueLinks.length > 0) {
+      mergedByType[type] = [...previousLinks, ...uniqueLinks]
+    }
+  })
+
+  return {
+    ...previousResults,
+    ...incomingResults,
+    total: Object.values(mergedByType).reduce((sum, links) => sum + links.length, 0),
+    merged_by_type: mergedByType
+  }
+}
 
 function App() {
   const [searchResults, setSearchResults] = useState(null)
@@ -23,15 +79,72 @@ function App() {
       return []
     }
   })
+  const activeSearchControllerRef = useRef(null)
+  const activeRequestIdRef = useRef(0)
+  const hideSearchCardTimerRef = useRef(null)
 
   const isHomepage = useMemo(() => !hasSearched && !error, [hasSearched, error])
+
+  const clearHideSearchCardTimer = () => {
+    if (hideSearchCardTimerRef.current) {
+      window.clearTimeout(hideSearchCardTimerRef.current)
+      hideSearchCardTimerRef.current = null
+    }
+  }
+
+  const scheduleHideSearchCard = (requestId, delay = 1500) => {
+    clearHideSearchCardTimer()
+    hideSearchCardTimerRef.current = window.setTimeout(() => {
+      if (requestId === activeRequestIdRef.current) {
+        setShowSearchCard(false)
+      }
+    }, delay)
+  }
+
+  useEffect(() => () => {
+    activeSearchControllerRef.current?.abort()
+    clearHideSearchCardTimer()
+  }, [])
 
   const handleCloudTypesChange = (cloudTypes) => {
     setSelectedCloudTypes(cloudTypes)
     localStorage.setItem('selectedCloudTypes', JSON.stringify(cloudTypes))
   }
 
+  const continueBackgroundSearch = async (searchParams, requestId, controller) => {
+    try {
+      for (let i = 2; i <= 4; i += 1) {
+        await waitWithAbort(2000, controller.signal)
+        const results = await searchNetdisk(searchParams, { signal: controller.signal })
+
+        if (controller.signal.aborted || requestId !== activeRequestIdRef.current) {
+          return
+        }
+
+        setSearchResults((previousResults) => mergeSearchResults(previousResults, results))
+      }
+    } catch (error) {
+      if (!isRequestCancelled(error)) {
+        console.error('后台回填失败:', error)
+      }
+    } finally {
+      if (requestId === activeRequestIdRef.current && activeSearchControllerRef.current === controller) {
+        activeSearchControllerRef.current = null
+        scheduleHideSearchCard(requestId)
+      }
+    }
+  }
+
   const handleSearch = async (searchParams) => {
+    const requestId = activeRequestIdRef.current + 1
+    activeRequestIdRef.current = requestId
+
+    activeSearchControllerRef.current?.abort()
+    clearHideSearchCardTimer()
+
+    const controller = new AbortController()
+    activeSearchControllerRef.current = controller
+
     setHasSearched(true)
     setIsSearching(true)
     setError(null)
@@ -39,63 +152,43 @@ function App() {
     setSearchResults(null)
 
     try {
-      const firstResults = await searchNetdisk(searchParams)
+      const firstResults = await searchNetdisk(searchParams, { signal: controller.signal })
+
+      if (controller.signal.aborted || requestId !== activeRequestIdRef.current) {
+        return
+      }
+
       setIsSearching(false)
       setSearchResults(firstResults)
 
       if (firstResults && Object.keys(firstResults.merged_by_type || {}).length > 0) {
-        continueBackgroundSearch(searchParams)
+        void continueBackgroundSearch(searchParams, requestId, controller)
       } else {
         setShowSearchCard(false)
+        if (activeSearchControllerRef.current === controller) {
+          activeSearchControllerRef.current = null
+        }
       }
     } catch (err) {
+      if (isRequestCancelled(err)) {
+        if (requestId === activeRequestIdRef.current && activeSearchControllerRef.current === controller) {
+          activeSearchControllerRef.current = null
+        }
+        return
+      }
+
+      if (requestId !== activeRequestIdRef.current) {
+        return
+      }
+
       setIsSearching(false)
       setError(err.message || '搜索失败，请稍后重试')
       setShowSearchCard(false)
       setSearchResults(null)
-    }
-  }
 
-  const continueBackgroundSearch = async (searchParams) => {
-    try {
-      for (let i = 2; i <= 4; i += 1) {
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        const results = await searchNetdisk(searchParams)
-
-        setSearchResults((prevResults) => {
-          if (!prevResults) return results
-
-          const mergedResults = {
-            ...prevResults,
-            total: 0,
-            merged_by_type: { ...prevResults.merged_by_type }
-          }
-
-          Object.keys(results.merged_by_type || {}).forEach((type) => {
-            const prevLinks = mergedResults.merged_by_type[type] || []
-            const newLinks = results.merged_by_type[type] || []
-            const existingUrls = new Set(prevLinks.map((link) => link.url))
-            const uniqueNewLinks = newLinks.filter((link) => !existingUrls.has(link.url))
-
-            if (uniqueNewLinks.length > 0) {
-              mergedResults.merged_by_type[type] = [...prevLinks, ...uniqueNewLinks]
-            }
-          })
-
-          mergedResults.total = Object.values(mergedResults.merged_by_type).reduce(
-            (sum, links) => sum + links.length,
-            0
-          )
-
-          return mergedResults
-        })
+      if (activeSearchControllerRef.current === controller) {
+        activeSearchControllerRef.current = null
       }
-    } catch {
-      // silent background update failure
-    } finally {
-      setTimeout(() => {
-        setShowSearchCard(false)
-      }, 1500)
     }
   }
 
@@ -169,10 +262,10 @@ function App() {
               )}
 
               {showSearchCard && (
-                <section className="glass-card rounded-2xl p-4 sm:p-5 animate-slide-up">
+                <section className="glass-card rounded-2xl p-4 sm:p-5 animate-slide-up" role="status" aria-live="polite">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-md">
-                      <svg className="w-5 h-5 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </div>
@@ -185,7 +278,7 @@ function App() {
               )}
 
               {error && (
-                <section className="rounded-2xl border p-4 animate-slide-up" style={{ background: 'var(--danger-bg)', borderColor: 'var(--danger-border)' }}>
+                <section className="rounded-2xl border p-4 animate-slide-up" style={{ background: 'var(--danger-bg)', borderColor: 'var(--danger-border)' }} role="alert">
                   <h3 className="font-semibold" style={{ color: 'var(--danger-text)' }}>搜索出错</h3>
                   <p className="text-sm mt-1" style={{ color: 'var(--danger-text)' }}>{error}</p>
                 </section>

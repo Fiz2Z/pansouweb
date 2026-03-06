@@ -1,5 +1,8 @@
 import axios from 'axios'
 
+export const isRequestCancelled = (error) =>
+  error?.code === 'ERR_CANCELED' || error?.name === 'CanceledError' || error?.name === 'AbortError'
+
 // 使用相对路径，这样API请求会发送到同一个域名
 // 通过nginx配置将API请求代理到后端服务
 const API_BASE_URL = ''
@@ -32,12 +35,16 @@ api.interceptors.response.use(
     return response
   },
   (error) => {
+    if (isRequestCancelled(error)) {
+      return Promise.reject(error)
+    }
+
     console.error('响应错误:', error)
-    
+
     if (error.code === 'ECONNABORTED') {
       throw new Error('请求超时，请检查网络连接')
     }
-    
+
     if (error.response) {
       // 服务器返回错误状态码
       const { status, data } = error.response
@@ -59,11 +66,12 @@ api.interceptors.response.use(
  * @param {Object} params 搜索参数
  * @param {string} params.kw 搜索关键词
  * @param {string[]} params.cloud_types 网盘类型数组
+ * @param {AbortSignal} [options.signal] 请求取消信号
  * @returns {Promise<Object>} 搜索结果
  */
-export const searchNetdisk = async (params) => {
+export const searchNetdisk = async (params, options = {}) => {
   const { kw, cloud_types } = params
-  
+
   if (!kw || !kw.trim()) {
     throw new Error('请输入搜索关键词')
   }
@@ -79,18 +87,24 @@ export const searchNetdisk = async (params) => {
   }
 
   try {
-    const response = await api.post('/api/search', searchParams)
-    
+    const response = await api.post('/api/search', searchParams, {
+      signal: options.signal
+    })
+
     // 检查响应格式，如果有包装结构则解包
     let resultData = response.data
     if (resultData && (resultData.code === 200 || resultData.code === 0) && resultData.data) {
       resultData = resultData.data
     }
-    
+
     console.log(`搜索完成: 找到 ${resultData.total || 0} 条结果，${Object.keys(resultData.merged_by_type || {}).length} 种网盘类型`)
-    
+
     return resultData
   } catch (error) {
+    if (isRequestCancelled(error)) {
+      throw error
+    }
+
     console.error('搜索API调用失败:', error)
     throw error
   }
