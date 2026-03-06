@@ -19,8 +19,8 @@ const CLOUD_TYPES = [
 
 const OTHER_TYPES = [
   { value: 'magnet', label: '磁力链接', color: 'bg-slate-500' },
-  { value: 'torrent', label: 'Torrent', color: 'bg-slate-700' },
-  { value: 'thunder', label: 'Thunder', color: 'bg-indigo-600' },
+  { value: 'torrent', label: '种子文件', color: 'bg-slate-700' },
+  { value: 'thunder', label: '迅雷链接', color: 'bg-indigo-600' },
   { value: 'ed2k', label: 'ED2K链接', color: 'bg-slate-600' }
 ]
 

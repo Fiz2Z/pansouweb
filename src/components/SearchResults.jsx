@@ -10,13 +10,13 @@ const CLOUD_TYPE_CONFIG = {
   '115': { name: '115网盘', color: 'from-yellow-500 to-amber-500' },
   pikpak: { name: 'PikPak', color: 'from-pink-500 to-fuchsia-500' },
   xunlei: { name: '迅雷网盘', color: 'from-indigo-500 to-blue-500' },
-  thunder: { name: 'Thunder', color: 'from-indigo-600 to-slate-700' },
+  thunder: { name: '迅雷链接', color: 'from-indigo-600 to-slate-700' },
   '123': { name: '123网盘', color: 'from-cyan-500 to-sky-600' },
   magnet: { name: '磁力链接', color: 'from-slate-500 to-slate-700' },
   ed2k: { name: 'ED2K', color: 'from-slate-600 to-slate-800' },
   mobile: { name: '移动云盘', color: 'from-teal-500 to-cyan-600' },
   lanzou: { name: '蓝奏云盘', color: 'from-blue-600 to-indigo-600' },
-  torrent: { name: 'Torrent', color: 'from-zinc-600 to-zinc-800' }
+  torrent: { name: '种子文件', color: 'from-zinc-600 to-zinc-800' }
 }
 
 const formatDate = (value) => {

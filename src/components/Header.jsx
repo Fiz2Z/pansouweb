@@ -20,24 +20,50 @@ const Header = ({ selectedCloudTypes, onCloudTypesChange, isSettingsOpen, setIsS
   const [apiStatus, setApiStatus] = useState('checking')
 
   useEffect(() => {
+    let disposed = false
+
     const checkHealth = async () => {
+      if (disposed) return
+
+      setApiStatus((currentStatus) => (currentStatus === 'checking' ? currentStatus : 'checking'))
+
       try {
         await checkApiHealth()
-        setApiStatus('online')
+        if (!disposed) {
+          setApiStatus('online')
+        }
       } catch {
-        setApiStatus('offline')
+        if (!disposed) {
+          setApiStatus('offline')
+        }
       }
     }
 
-    checkHealth()
-    const interval = setInterval(checkHealth, 30000)
-    return () => clearInterval(interval)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void checkHealth()
+      }
+    }
+
+    const handleOnline = () => {
+      void checkHealth()
+    }
+
+    void checkHealth()
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('online', handleOnline)
+
+    return () => {
+      disposed = true
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('online', handleOnline)
+    }
   }, [])
 
   const statusConfig = {
     online: { dot: 'bg-emerald-500', text: '服务正常' },
-    offline: { dot: 'bg-rose-500', text: '服务离线' },
-    checking: { dot: 'bg-amber-500', text: '状态检查中' }
+    offline: { dot: 'bg-rose-500', text: '服务暂不可用' },
+    checking: { dot: 'bg-amber-500', text: '正在检查服务状态' }
   }
 
   const currentStatus = statusConfig[apiStatus] || statusConfig.checking

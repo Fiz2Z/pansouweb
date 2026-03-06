@@ -213,7 +213,7 @@ function App() {
             <div className="max-w-6xl mx-auto">
               <section className="glass-card-strong rounded-3xl p-6 sm:p-8 lg:p-10 animate-fade-in">
                 <div className="text-center max-w-3xl mx-auto">
-                  <p className="text-sm font-semibold tracking-wide text-sky-700 dark:text-sky-300">PanSou Search Engine</p>
+                  <p className="text-sm font-semibold tracking-wide text-sky-700 dark:text-sky-300">盘搜聚合检索</p>
                   <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold text-gradient-primary leading-tight">
                     全网网盘资源搜索
                   </h1>

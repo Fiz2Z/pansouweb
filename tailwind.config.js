@@ -8,9 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['Outfit', 'sans-serif'],
-        body: ['Manrope', 'sans-serif'],
-        sans: ['Manrope', 'sans-serif'],
+        heading: ['PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Source Han Sans SC', 'sans-serif'],
+        body: ['PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Source Han Sans SC', 'sans-serif'],
+        sans: ['PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Source Han Sans SC', 'sans-serif'],
       },
       colors: {
         primary: {
@@ -64,4 +64,3 @@ export default {
   },
   plugins: [],
 }
-
